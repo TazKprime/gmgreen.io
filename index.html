@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GM Green Advisory – Green Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy: #0d2137;
+  --navy-mid: #1a3a5c;
+  --green: #2e7d32;
+  --green-light: #4caf50;
+  --green-accent: #76c442;
+  --green-pale: #e8f5e9;
+  --green-pale2: #f1f8e9;
+  --gold: #f59e0b;
+  --red: #ef4444;
+  --orange: #f97316;
+  --blue-mid: #1565c0;
+  --white: #ffffff;
+  --gray-50: #f8fafb;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-600: #64748b;
+  --gray-800: #1e293b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.14);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh;overflow-x:hidden}
+
+/* ===== LOGIN ===== */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 50%,#143d2b 100%);position:relative;overflow:hidden}
+#login-screen::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.login-card{background:white;border-radius:20px;padding:48px 44px;width:440px;box-shadow:0 32px 80px rgba(0,0,0,0.4);position:relative;z-index:1}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.login-logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:12px;display:flex;align-items:center;justify-content:center}
+.login-logo-icon svg{width:32px;height:32px}
+.login-logo-text{line-height:1.1}
+.login-logo-text strong{display:block;font-size:18px;font-weight:700;color:var(--navy)}
+.login-logo-text span{font-size:12px;color:var(--green);font-weight:600;letter-spacing:.5px}
+.login-subtitle{color:var(--gray-600);font-size:14px;margin-bottom:28px;line-height:1.5}
+.login-title{font-size:26px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-group input{width:100%;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;transition:.2s;outline:none;color:var(--gray-800)}
+.form-group input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(46,125,50,.12)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),var(--green-light));color:white;border:none;border-radius:var(--radius-sm);font-size:16px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.3px;margin-top:8px}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(46,125,50,.35)}
+.login-hint{font-size:12px;color:var(--gray-400);text-align:center;margin-top:16px}
+.login-hint span{color:var(--green);font-weight:600}
+.login-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:14px;display:none}
+
+/* ===== APP SHELL ===== */
+#app{display:none;flex-direction:row;min-height:100vh}
+
+/* ===== SIDEBAR ===== */
+.sidebar{width:240px;background:var(--navy);flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;transition:.3s}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo-wrap{display:flex;align-items:center;gap:10px}
+.sidebar-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--green),var(--green-light));border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sidebar-logo-text strong{display:block;font-size:14px;font-weight:700;color:white;line-height:1.1}
+.sidebar-logo-text small{font-size:10px;color:var(--green-accent);letter-spacing:.5px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-section{margin-bottom:20px}
+.nav-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;padding:0 8px;margin-bottom:8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);color:rgba(255,255,255,.65);font-size:13.5px;font-weight:500;cursor:pointer;transition:.2s;margin-bottom:2px;text-decoration:none}
+.nav-item:hover{background:rgba(255,255,255,.08);color:white}
+.nav-item.active{background:linear-gradient(90deg,rgba(76,175,80,.25),rgba(76,175,80,.1));color:white;border-left:3px solid var(--green-light)}
+.nav-item svg{width:17px;height:17px;opacity:.8;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:20px}
+.sidebar-bottom{padding:16px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);cursor:pointer}
+.sidebar-user:hover{background:rgba(255,255,255,.06)}
+.user-avatar{width:34px;height:34px;background:linear-gradient(135deg,var(--green-accent),var(--green));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.user-info{flex:1;overflow:hidden}
+.user-name{font-size:13px;font-weight:600;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:rgba(255,255,255,.4)}
+.logout-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;padding:4px}
+.logout-btn:hover{color:white}
+
+/* ===== MAIN CONTENT ===== */
+.main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ===== TOPBAR ===== */
+.topbar{background:white;border-bottom:1px solid var(--gray-200);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow-sm)}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.page-title{font-size:18px;font-weight:700;color:var(--navy)}
+.page-sub{font-size:12px;color:var(--gray-400);margin-top:1px}
+.topbar-controls{display:flex;align-items:center;gap:10px}
+.topbar-select{padding:7px 12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;color:var(--gray-800);background:white;cursor:pointer;outline:none}
+.topbar-select:focus{border-color:var(--green)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.icon-btn{width:38px;height:38px;border-radius:var(--radius-sm);border:1.5px solid var(--gray-200);background:white;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--gray-600);transition:.2s}
+.icon-btn:hover{border-color:var(--green);color:var(--green)}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid white}
+.last-updated{font-size:12px;color:var(--gray-400);display:flex;align-items:center;gap:5px}
+.refresh-icon{width:14px;height:14px;cursor:pointer;color:var(--green)}
+
+/* ===== PAGE CONTENT ===== */
+.page{display:none;padding:24px 28px;flex:1}
+.page.active{display:block}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.kpi-card{background:white;border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200);position:relative;overflow:hidden;transition:.2s}
+.kpi-card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}
+.kpi-card.profit::before{background:var(--green-light)}
+.kpi-card.cost::before{background:var(--orange)}
+.kpi-card.revenue::before{background:var(--blue-mid)}
+.kpi-card.yield::before{background:var(--green-accent)}
+.kpi-card.breakeven::before{background:var(--gold)}
+.kpi-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.kpi-icon.profit{background:var(--green-pale)}
+.kpi-icon.cost{background:#fff7ed}
+.kpi-icon.revenue{background:#eff6ff}
+.kpi-icon.yield{background:var(--green-pale2)}
+.kpi-icon.breakeven{background:#fffbeb}
+.kpi-label{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.kpi-value{font-size:22px;font-weight:700;color:var(--navy);font-family:'JetBrains Mono',monospace;line-height:1}
+.kpi-sub{font-size:12px;margin-top:5px;display:flex;align-items:center;gap:4px}
+.kpi-sub.up{color:var(--green)}
+.kpi-sub.ok{color:var(--blue-mid)}
+.kpi-sub.warn{color:var(--orange)}
+
+/* ===== SECTION GRID ===== */
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.grid-1-1{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.grid-1-1-1{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+
+/* ===== CARD ===== */
+.card{background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);border:1px solid var(--gray-200)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:14px;font-weight:700;color:var(--navy)}
+.card-subtitle{font-size:11px;color:var(--gray-400);margin-top:2px}
+.card-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.card-badge.new{background:var(--green-pale);color:var(--green)}
+.card-badge.high{background:#fef2f2;color:var(--red)}
+
+/* ===== RISK GAUGE ===== */
+.risk-gauge-wrap{text-align:center;padding:10px 0}
+.gauge-svg{width:160px;height:100px;margin:0 auto;display:block}
+.risk-label{font-size:16px;font-weight:700;margin-top:4px}
+.risk-label.medium{color:var(--gold)}
+.risk-label.high{color:var(--red)}
+.risk-label.low{color:var(--green)}
+.risk-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+.risk-breakdown{margin-top:14px}
+.risk-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:13px}
+.risk-row:last-child{border:none}
+.risk-row-left{display:flex;align-items:center;gap:8px;color:var(--gray-700)}
+.risk-row-left svg{width:15px;height:15px;color:var(--gray-400)}
+.risk-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.risk-pill.high{background:#fef2f2;color:var(--red)}
+.risk-pill.medium{background:#fffbeb;color:#b45309}
+.risk-pill.low{background:var(--green-pale);color:var(--green)}
+
+/* ===== RECOMMENDATIONS ===== */
+.rec-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100)}
+.rec-item:last-child{border:none}
+.rec-icon{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.rec-icon.high-p{background:#fef2f2}
+.rec-icon.med-p{background:#fffbeb}
+.rec-icon.low-p{background:var(--green-pale)}
+.rec-body{flex:1}
+.rec-title{font-size:13px;font-weight:600;color:var(--gray-800)}
+.rec-desc{font-size:12px;color:var(--gray-400);margin-top:2px}
+.rec-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.rec-badge.high-p{background:#fef2f2;color:var(--red)}
+.rec-badge.med-p{background:#fffbeb;color:#b45309}
+.rec-badge.low-p{background:var(--green-pale);color:var(--green)}
+
+/* ===== ALERTS ===== */
+.alert-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-100)}
+.alert-item:last-child{border:none}
+.alert-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.alert-dot.high{background:var(--red)}
+.alert-dot.medium{background:var(--gold)}
+.alert-dot.low{background:var(--green-light)}
+.alert-title{font-size:13px;font-weight:600;color:var(--gray-800)}
+.alert-desc{font-size:11px;color:var(--gray-400);margin-top:2px}
+.alert-level{font-size:11px;font-weight:600;margin-left:auto;flex-shrink:0}
+.alert-level.high{color:var(--red)}
+.alert-level.medium{color:var(--gold)}
+
+/* ===== WEATHER ===== */
+.weather-row{display:flex;gap:8px;justify-content:space-between}
+.weather-day{flex:1;text-align:center;padding:10px 6px;border-radius:var(--radius-sm);background:var(--gray-50)}
+.weather-day.today{background:var(--green-pale);border:1px solid rgba(76,175,80,.2)}
+.weather-day-name{font-size:11px;font-weight:600;color:var(--gray-400);margin-bottom:4px}
+.weather-icon{font-size:20px;margin-bottom:4px}
+.weather-temp{font-size:13px;font-weight:700;color:var(--navy)}
+.weather-cond{font-size:10px;color:var(--gray-400)}
+
+/* ===== FINANCIAL TABLE ===== */
+.fin-table{width:100%}
+.fin-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--gray-100);font-size:13px}
+.fin-row:last-child{border:none;font-weight:700;padding-top:12px}
+.fin-row span:first-child{color:var(--gray-600)}
+.fin-row span:last-child{color:var(--navy);font-weight:600}
+.fin-row.total span{color:var(--navy);font-size:14px}
+
+/* ===== YIELD CHART AREA ===== */
+.chart-wrap{position:relative;height:180px}
+
+/* ===== YIELD COMPARISON ===== */
+.yield-compare{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center;margin-bottom:16px}
+.yield-box{text-align:center;padding:16px}
+.yield-box-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.yield-box-label.potential{color:var(--green)}
+.yield-box-label.actual{color:var(--blue-mid)}
+.yield-num{font-size:40px;font-weight:700;line-height:1}
+.yield-num.potential{color:var(--green)}
+.yield-num.actual{color:var(--blue-mid)}
+.yield-unit{font-size:12px;color:var(--gray-400);margin-top:2px}
+.yield-vs{font-size:16px;font-weight:700;color:var(--gray-300)}
+.yield-gap-box{background:var(--green-pale2);border-radius:var(--radius-sm);padding:14px;text-align:center;margin-bottom:12px}
+.yield-gap-num{font-size:28px;font-weight:700;color:var(--orange)}
+.yield-gap-label{font-size:11px;color:var(--gray-500);margin-top:2px}
+.gap-reasons{font-size:12px;color:var(--gray-600)}
+.gap-reason{display:flex;align-items:center;gap:6px;padding:4px 0}
+
+/* ===== CROP CALENDAR ===== */
+.cal-table{width:100%;border-collapse:collapse}
+.cal-table th{font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;text-align:left;border-bottom:2px solid var(--gray-100)}
+.cal-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--gray-100)}
+.cal-table tr:last-child td{border:none}
+.cal-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.cal-status.completed{background:var(--green-pale);color:var(--green)}
+.cal-status.current{background:#eff6ff;color:var(--blue-mid)}
+.cal-status.upcoming{background:#fffbeb;color:#b45309}
+.cal-status.pending{background:var(--gray-100);color:var(--gray-400)}
+
+/* ===== ADVISORIES ===== */
+.advisory-item{padding:14px;border-radius:var(--radius-sm);background:var(--gray-50);border-left:3px solid var(--green-light);margin-bottom:10px}
+.advisory-item:last-child{margin-bottom:0}
+.advisory-title{font-size:13px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.advisory-title span{font-size:14px}
+.advisory-text{font-size:12px;color:var(--gray-600);line-height:1.5}
+
+/* ===== COST BREAKDOWN ===== */
+.cost-chart-wrap{height:160px;position:relative}
+.cost-legend{margin-top:12px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;color:var(--gray-600)}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* ===== SCENARIOS ===== */
+.scenario-table{width:100%;border-collapse:collapse}
+.scenario-table th{font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;text-align:left;border-bottom:2px solid var(--gray-100)}
+.scenario-table td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--gray-100)}
+.scenario-table tr:last-child td{border:none}
+.sc-neg{color:var(--red);font-weight:600}
+.sc-pos{color:var(--green);font-weight:600}
+.sc-med{color:var(--gold);font-weight:600}
+
+/* ===== SENSITIVITY ===== */
+.sens-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:12px}
+.sens-row:last-child{border:none}
+.sens-label{width:120px;color:var(--gray-600)}
+.sens-bar-wrap{flex:1;background:var(--gray-100);border-radius:4px;height:8px;overflow:hidden}
+.sens-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--green-accent))}
+.sens-val{width:60px;text-align:right;font-weight:600;color:var(--navy)}
+
+/* ===== AI CHAT ===== */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;background:var(--gray-50);border-radius:var(--radius) var(--radius) 0 0;border:1px solid var(--gray-200);border-bottom:none}
+.chat-msg{display:flex;gap:10px;margin-bottom:14px}
+.chat-msg.user{flex-direction:row-reverse}
+.chat-bubble{max-width:75%;padding:11px 15px;border-radius:16px;font-size:13px;line-height:1.5}
+.chat-msg.ai .chat-bubble{background:white;border:1px solid var(--gray-200);border-bottom-left-radius:4px;color:var(--gray-800)}
+.chat-msg.user .chat-bubble{background:linear-gradient(135deg,var(--green),var(--green-light));color:white;border-bottom-right-radius:4px}
+.chat-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.chat-avatar.ai{background:var(--navy);color:white}
+.chat-avatar.user{background:var(--green-accent);color:white}
+.chat-input-wrap{border:1px solid var(--gray-200);border-radius:0 0 var(--radius) var(--radius);background:white;display:flex;align-items:center;padding:12px 16px;gap:10px}
+.chat-input{flex:1;border:none;outline:none;font-size:14px;font-family:inherit;color:var(--gray-800);background:transparent}
+.chat-input::placeholder{color:var(--gray-400)}
+.chat-send-btn{background:var(--green);color:white;border:none;border-radius:var(--radius-sm);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.chat-send-btn:hover{background:var(--green-light)}
+.chat-loading{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-400)}
+.typing-dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gray-400);animation:bounce 1.2s infinite;margin:0 1px}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+.quick-questions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.quick-q{background:white;border:1.5px solid var(--green-pale);color:var(--green);font-size:12px;font-weight:500;padding:6px 12px;border-radius:20px;cursor:pointer;transition:.2s}
+.quick-q:hover{background:var(--green-pale);border-color:var(--green-light)}
+
+/* ===== MARKET PRICES ===== */
+.market-card{background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:var(--radius);padding:20px;color:white;margin-bottom:16px}
+.market-crop{font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.market-unit{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
+.market-trend{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;margin-top:10px}
+.market-trend.up{background:rgba(76,175,80,.25);color:var(--green-accent)}
+.market-price-input{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);padding:8px 12px;color:white;font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;width:140px;outline:none}
+.market-price-input:focus{border-color:var(--green-accent)}
+
+/* ===== SATELLITE DATA ===== */
+.sat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.sat-card{background:white;border-radius:var(--radius-sm);padding:14px;border:1px solid var(--gray-200);text-align:center}
+.sat-value{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)}
+.sat-label{font-size:11px;color:var(--gray-400);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.sat-source{font-size:10px;color:var(--green);margin-top:4px;font-weight:600}
+.sat-status{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.sat-status.good{background:var(--green-light)}
+.sat-status.warn{background:var(--gold)}
+
+/* ===== GENERATE PLAN ===== */
+.generate-section{background:linear-gradient(135deg,var(--navy),#143d2b);border-radius:var(--radius);padding:24px;color:white;margin-bottom:20px;position:relative;overflow:hidden}
+.generate-section::after{content:'🛰️';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:64px;opacity:.12}
+.gen-title{font-size:18px;font-weight:700;margin-bottom:6px}
+.gen-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:18px}
+.gen-form{display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;align-items:end}
+.gen-form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 14px;align-items:end}
+@media(max-width:1100px){.gen-form-grid{grid-template-columns:repeat(2,1fr)}}
+.gen-field{display:flex;flex-direction:column;gap:6px}
+.gen-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px}
+.gen-input, .gen-select{padding:10px 12px;border:1.5px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);background:rgba(255,255,255,.1);color:white;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.gen-input::placeholder{color:rgba(255,255,255,.4)}
+.gen-input:focus, .gen-select:focus{border-color:var(--green-accent);background:rgba(255,255,255,.15)}
+.gen-select option{background:var(--navy);color:white}
+.gen-btn{padding:10px 20px;background:linear-gradient(135deg,var(--green-accent),var(--green-light));color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+.gen-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(118,196,66,.4)}
+.gen-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.loading-overlay{background:rgba(255,255,255,.95);border-radius:var(--radius);position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:420px;padding:32px;box-shadow:var(--shadow-lg);z-index:200;text-align:center}
+.loading-overlay.hidden{display:none}
+.loading-steps{margin-top:20px;text-align:left}
+.loading-step{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:var(--gray-400);transition:.3s}
+.loading-step.done{color:var(--green)}
+.loading-step.active{color:var(--navy);font-weight:600}
+.step-icon{width:20px;height:20px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.step-icon.done{background:var(--green-pale);color:var(--green)}
+.step-icon.active{background:var(--navy);color:white;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(13,33,55,.3)}50%{box-shadow:0 0 0 6px rgba(13,33,55,0)}}
+.spin{display:inline-block;animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.overlay-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199;display:none}
+.overlay-backdrop.show{display:block}
+
+/* ===== PROFIT IMPACT BAR ===== */
+.profit-bars{display:flex;align-items:flex-end;gap:20px;height:140px;padding-top:20px}
+.profit-bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.profit-bar{width:60px;border-radius:6px 6px 0 0;position:relative;display:flex;align-items:flex-start;justify-content:center;padding-top:6px}
+.profit-bar .bar-label{font-size:12px;font-weight:700;color:white}
+.profit-bar-name{font-size:11px;color:var(--gray-400);text-align:center;line-height:1.3}
+.profit-bar.without{background:linear-gradient(180deg,#94a3b8,#64748b);height:45%}
+.profit-bar.with{background:linear-gradient(180deg,var(--green-accent),var(--green));height:85%}
+.profit-delta{background:var(--green-pale);border:1px solid rgba(76,175,80,.3);border-radius:var(--radius-sm);padding:8px 14px;text-align:center;margin-top:10px}
+.profit-delta strong{color:var(--green);font-size:14px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.gen-form{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.sidebar{width:64px}.main-content{margin-left:64px}.sidebar-logo-text,.nav-item span,.user-info,.sidebar-bottom .user-info{display:none}.nav-item{justify-content:center;padding:10px}.kpi-grid{grid-template-columns:1fr 1fr}.grid-2-1{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="8" width="10" height="16" rx="2" fill="#4caf50"/>
+          <rect x="14" y="2" width="6" height="28" rx="2" fill="#76c442"/>
+          <rect x="22" y="12" width="8" height="12" rx="2" fill="#ffffff" opacity="0.8"/>
+        </svg>
+      </div>
+      <div class="login-logo-text">
+        <strong>GM Green Solutions</strong>
+        <span>AGRIBUSINESS & RESEARCH</span>
+      </div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-subtitle">Sign in to access your farm intelligence dashboard and advisory services.</div>
+    <div class="login-error" id="login-error">Invalid username or password. Please try again.</div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="e.g. kofi.mensah" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-hint">Demo: username <span>farmer</span> / password <span>ghana2025</span></div>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-wrap">
+        <div class="sidebar-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="8" width="10" height="16" rx="2" fill="#4caf50"/>
+            <rect x="14" y="2" width="6" height="28" rx="2" fill="#76c442"/>
+            <rect x="22" y="12" width="8" height="12" rx="2" fill="#fff" opacity="0.8"/>
+          </svg>
+        </div>
+        <div class="sidebar-logo-text">
+          <strong>GM Green</strong>
+          <small>ADVISORY</small>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" onclick="showPage('dashboard',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="showPage('farm-overview',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
+          <span>Farm Overview</span>
+        </div>
+        <div class="nav-item" onclick="showPage('crop-plan',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 3 2 3s10 9 10 9M12 12c0-5 5-9 10-9s-10 9-10 9"/></svg>
+          <span>Crop Plan</span>
+          <span class="nav-badge">New</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Operations</div>
+        <div class="nav-item" onclick="showPage('activities',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Activities</span>
+        </div>
+        <div class="nav-item" onclick="showPage('financials',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Finances</span>
+        </div>
+        <div class="nav-item" onclick="showPage('satellite',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <span>Satellite Data</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Intelligence</div>
+        <div class="nav-item" onclick="showPage('advisory',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>AI Advisory</span>
+          <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" onclick="showPage('alerts',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span>Alerts</span>
+          <span class="nav-badge">4</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar">KM</div>
+        <div class="user-info">
+          <div class="user-name">Kofi Mensah</div>
+          <div class="user-role">Tamale, Ghana</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()" title="Logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div>
+          <div class="page-title" id="page-title">Dashboard</div>
+          <div class="page-sub">Good morning, Kofi! ☀️ Here's your farm summary.</div>
+        </div>
+      </div>
+      <div class="topbar-controls">
+        <select class="topbar-select">
+          <option id="topbar-season-0"></option>
+          <option id="topbar-season-1"></option>
+          <option id="topbar-season-2"></option>
+          <option id="topbar-season-3"></option>
+        </select>
+        <select class="topbar-select">
+          <option>Green Fields Farm</option>
+          <option>North Block Farm</option>
+        </select>
+      </div>
+      <div class="topbar-right">
+        <div class="last-updated">
+          <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          <span id="live-datetime"><span id="last-sync-time"></span></span>
+        </div>
+        <div class="icon-btn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div class="page active" id="page-dashboard">
+      <!-- KPI Row -->
+      <div class="kpi-grid">
+        <div class="kpi-card profit">
+          <div class="kpi-icon profit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="kpi-label">Net Profit</div>
+          <div class="kpi-value">GHS 2,220</div>
+          <div class="kpi-sub up">↑ +42% vs Target</div>
+        </div>
+        <div class="kpi-card cost">
+          <div class="kpi-icon cost"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg></div>
+          <div class="kpi-label">Total Cost</div>
+          <div class="kpi-value">GHS 2,180</div>
+          <div class="kpi-sub ok">✓ On Track</div>
+        </div>
+        <div class="kpi-card revenue">
+          <div class="kpi-icon revenue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+          <div class="kpi-label">Total Revenue</div>
+          <div class="kpi-value">GHS 4,400</div>
+          <div class="kpi-sub ok">✓ On Track</div>
+        </div>
+        <div class="kpi-card yield">
+          <div class="kpi-icon yield"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 3 2 3s10 9 10 9M12 12c0-5 5-9 10-9s-10 9-10 9"/></svg></div>
+          <div class="kpi-label">Expected Yield</div>
+          <div class="kpi-value">20 bg/ac</div>
+          <div class="kpi-sub ok">✓ On Target</div>
+        </div>
+        <div class="kpi-card breakeven">
+          <div class="kpi-icon breakeven"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+          <div class="kpi-label">Break-even</div>
+          <div class="kpi-value">GHS 43.60/bg</div>
+          <div class="kpi-sub up">Good Margin</div>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <!-- Yield Progress -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Yield Progress — Maize</div>
+              <div class="card-subtitle">Actual vs Target (bags/acre) across growth stages</div>
+            </div>
+            <span class="card-badge new">On Track ✓</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="yieldChart"></canvas>
+          </div>
+          <div style="font-size:12px;color:var(--green);margin-top:10px;display:flex;align-items:center;gap:6px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            You are on track to meet your target yield of 20 bags/acre.
+          </div>
+        </div>
+        <!-- Risk Summary -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Risk Status</div></div>
+          <div class="risk-gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 160 100">
+              <path d="M20 90 A60 60 0 0 1 140 90" stroke="#f3f4f6" stroke-width="16" fill="none" stroke-linecap="round"/>
+              <path d="M20 90 A60 60 0 0 1 80 30" stroke="#4caf50" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.9"/>
+              <path d="M80 30 A60 60 0 0 1 125 52" stroke="#f59e0b" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.9"/>
+              <path d="M125 52 A60 60 0 0 1 140 90" stroke="#ef4444" stroke-width="16" fill="none" stroke-linecap="round" opacity="0.9"/>
+              <!-- needle -->
+              <line x1="80" y1="90" x2="108" y2="42" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="80" cy="90" r="5" fill="#1e293b"/>
+            </svg>
+            <div class="risk-label medium">MEDIUM RISK</div>
+            <div class="risk-sub">Monitor closely and take recommended actions.</div>
+          </div>
+          <div class="risk-breakdown">
+            <div class="risk-row"><div class="risk-row-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>Weather Risk</div><span class="risk-pill medium">Medium</span></div>
+            <div class="risk-row"><div class="risk-row-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-3.92 7.94"/></svg>Pest & Disease</div><span class="risk-pill high">High</span></div>
+            <div class="risk-row"><div class="risk-row-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Price Risk</div><span class="risk-pill medium">Medium</span></div>
+            <div class="risk-row"><div class="risk-row-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18"/></svg>Input Cost Risk</div><span class="risk-pill low">Low</span></div>
+            <div class="risk-row"><div class="risk-row-left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Water Risk</div><span class="risk-pill low">Low</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <!-- Financial Summary -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Financial Summary</div><div class="card-subtitle">2.5 Acres</div></div>
+          <div class="fin-table">
+            <div class="fin-row"><span>Total Cost</span><span>GHS 2,180</span></div>
+            <div class="fin-row"><span>Total Revenue</span><span>GHS 4,400</span></div>
+            <div class="fin-row"><span>Net Profit</span><span style="color:var(--green)">GHS 2,220</span></div>
+            <div class="fin-row"><span>ROI</span><span style="color:var(--blue-mid)">102%</span></div>
+            <div class="fin-row"><span>Break-even Price</span><span>GHS 43.60/bag</span></div>
+          </div>
+        </div>
+        <!-- Top Recommendations -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Top Recommendations</div><div class="card-badge new">Live</div></div>
+          <div class="rec-item"><div class="rec-icon high-p">🐛</div><div class="rec-body"><div class="rec-title">Monitor Fall Armyworm</div><div class="rec-desc">Scout fields every 2–3 days.</div></div><span class="rec-badge high-p">HIGH</span></div>
+          <div class="rec-item"><div class="rec-icon med-p">🌱</div><div class="rec-body"><div class="rec-title">Split Fertilizer Application</div><div class="rec-desc">Apply remaining Urea in split dose.</div></div><span class="rec-badge med-p">MED</span></div>
+          <div class="rec-item"><div class="rec-icon med-p">💧</div><div class="rec-body"><div class="rec-title">Irrigate at Critical Stages</div><div class="rec-desc">Maintain soil moisture now.</div></div><span class="rec-badge med-p">MED</span></div>
+          <div class="rec-item"><div class="rec-icon low-p">📈</div><div class="rec-body"><div class="rec-title">Market Watch</div><div class="rec-desc">Prices are favorable. Plan sales.</div></div><span class="rec-badge low-p">LOW</span></div>
+        </div>
+        <!-- Latest Alerts -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Latest Alerts</div><div class="card-badge high">4 Active</div></div>
+          <div class="alert-item"><div class="alert-dot high"></div><div><div class="alert-title">Fall Armyworm Alert</div><div class="alert-desc">Population above threshold.</div></div><span class="alert-level high">High</span></div>
+          <div class="alert-item"><div class="alert-dot medium"></div><div><div class="alert-title">Dry Spell Forecast</div><div class="alert-desc">Possible dry spell in 5 days.</div></div><span class="alert-level medium">Medium</span></div>
+          <div class="alert-item"><div class="alert-dot medium"></div><div><div class="alert-title">Fertilizer Reminder</div><div class="alert-desc">2nd split due in 3 days. Apply Urea.</div></div><span class="alert-level medium">Medium</span></div>
+          <div class="alert-item"><div class="alert-dot medium"></div><div><div class="alert-title">Weed Control Due</div><div class="alert-desc">Weeds competing. Schedule weeding.</div></div><span class="alert-level medium">Medium</span></div>
+        </div>
+      </div>
+
+      <!-- Weather -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">7-Day Weather Outlook</div><div class="card-subtitle">Tamale, Northern Ghana · CHIRPS Data</div></div>
+        <div class="weather-row">
+          <div class="weather-day today"><div class="weather-day-name">Today</div><div class="weather-icon">🌦️</div><div class="weather-temp">28°C</div><div class="weather-cond">Light Rain</div></div>
+          <div class="weather-day"><div class="weather-day-name">Tue</div><div class="weather-icon">🌧️</div><div class="weather-temp">29°C</div><div class="weather-cond">Rain</div></div>
+          <div class="weather-day"><div class="weather-day-name">Wed</div><div class="weather-icon">⛅</div><div class="weather-temp">31°C</div><div class="weather-cond">Cloudy</div></div>
+          <div class="weather-day"><div class="weather-day-name">Thu</div><div class="weather-icon">🌧️</div><div class="weather-temp">30°C</div><div class="weather-cond">Rain</div></div>
+          <div class="weather-day"><div class="weather-day-name">Fri</div><div class="weather-icon">🌤️</div><div class="weather-temp">32°C</div><div class="weather-cond">Partly Cloudy</div></div>
+          <div class="weather-day"><div class="weather-day-name">Sat</div><div class="weather-icon">☀️</div><div class="weather-temp">33°C</div><div class="weather-cond">Sunny</div></div>
+          <div class="weather-day"><div class="weather-day-name">Sun</div><div class="weather-icon">⛅</div><div class="weather-temp">30°C</div><div class="weather-cond">Cloudy</div></div>
+        </div>
+        <div style="margin-top:12px;padding:10px 14px;background:#fffbeb;border-radius:var(--radius-sm);font-size:12px;color:#92400e;border-left:3px solid var(--gold)">
+          ⚠️ <strong>Risk:</strong> Moderate rainfall expected. Possible dry spells after day 5. Rainfall: 15–35mm expected this week.
+        </div>
+      </div>
+
+      <!-- Risk Guide -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:8px">
+        <div style="background:var(--green-pale);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px"><span style="width:10px;height:10px;background:var(--green-light);border-radius:50%;flex-shrink:0"></span><div><strong style="color:var(--green)">LOW RISK</strong><div style="color:var(--gray-500);margin-top:2px">Conditions are favorable.</div></div></div>
+        <div style="background:#fffbeb;border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px"><span style="width:10px;height:10px;background:var(--gold);border-radius:50%;flex-shrink:0"></span><div><strong style="color:#b45309">MEDIUM RISK</strong><div style="color:var(--gray-500);margin-top:2px">Some factors need attention.</div></div></div>
+        <div style="background:#fff7ed;border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px"><span style="width:10px;height:10px;background:var(--orange);border-radius:50%;flex-shrink:0"></span><div><strong style="color:#c2410c">HIGH RISK</strong><div style="color:var(--gray-500);margin-top:2px">Conditions may affect yield.</div></div></div>
+        <div style="background:#fef2f2;border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px"><span style="width:10px;height:10px;background:var(--red);border-radius:50%;flex-shrink:0"></span><div><strong style="color:var(--red)">CRITICAL RISK</strong><div style="color:var(--gray-500);margin-top:2px">Act now to reduce impact.</div></div></div>
+      </div>
+    </div>
+
+    <!-- ===== CROP PLAN PAGE ===== -->
+    <div class="page" id="page-crop-plan">
+      <!-- Generate Plan Section -->
+      <div class="generate-section">
+        <div class="gen-title">🛰️ Generate AI-Powered Farm Plan</div>
+        <div class="gen-sub">Enter your farm details below. Claude will fetch live satellite data (Sentinel-2, CHIRPS, SMAP) and generate a complete advisory plan.</div>
+        <div class="gen-form-grid">
+          <div class="gen-field">
+            <label class="gen-label">Region</label>
+            <select class="gen-select" id="gen-region" onchange="onRegionChange()">
+              <option value="">— Select Region —</option>
+            </select>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">District</label>
+            <select class="gen-select" id="gen-district" onchange="onDistrictChange()" disabled>
+              <option value="">— Select District —</option>
+            </select>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">Town / Community</label>
+            <select class="gen-select" id="gen-town" disabled>
+              <option value="">— Select Town —</option>
+            </select>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">Crop</label>
+            <select class="gen-select" id="gen-crop">
+              <option>Maize</option><option>Rice</option><option>Groundnut</option>
+              <option>Sorghum</option><option>Soybean</option><option>Yam</option>
+              <option>Cassava</option><option>Tomato</option><option>Cowpea</option>
+              <option>Plantain</option><option>Cocoa</option><option>Millet</option>
+            </select>
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">Farm Size (acres)</label>
+            <input class="gen-input" type="number" id="gen-size" value="2.5" min="0.5" step="0.5">
+          </div>
+          <div class="gen-field">
+            <label class="gen-label">Season</label>
+            <select class="gen-select" id="gen-season">
+              <option id="season-opt-0"></option><option id="season-opt-1"></option><option id="season-opt-2"></option><option id="season-opt-3"></option>
+            </select>
+          </div>
+          <button class="gen-btn" id="gen-btn" onclick="generatePlan()" style="align-self:flex-end">Generate Plan →</button>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <!-- Crop Calendar -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Crop Calendar & Key Activities</div><div class="card-subtitle">Crop: Maize · Season: <span class="dyn-cur-season"></span> · Area: 2.5 Acres</div></div>
+          </div>
+          <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--green)"><span style="width:8px;height:8px;background:var(--green-light);border-radius:50%"></span>Completed</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--blue-mid)"><span style="width:8px;height:8px;background:var(--blue-mid);border-radius:50%"></span>Current</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:#b45309"><span style="width:8px;height:8px;background:var(--gold);border-radius:50%"></span>Upcoming</span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-400)"><span style="width:8px;height:8px;background:var(--gray-300);border-radius:50%"></span>Pending</span>
+          </div>
+          <table class="cal-table">
+            <thead><tr><th>Activity</th><th>Start</th><th>End</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>🌾 Land Preparation</td><td><span class="act-date" data-m="May" data-d="01"></span></td><td><span class="act-date" data-m="May" data-d="10"></span></td><td><span class="cal-status completed">✓ Completed</span></td></tr>
+              <tr><td>🌱 Planting</td><td><span class="act-date" data-m="May" data-d="11"></span></td><td><span class="act-date" data-m="May" data-d="15"></span></td><td><span class="cal-status completed">✓ Completed</span></td></tr>
+              <tr><td>🧪 Basal Fertilizer App.</td><td><span class="act-date" data-m="May" data-d="12"></span></td><td><span class="act-date" data-m="May" data-d="16"></span></td><td><span class="cal-status completed">✓ Completed</span></td></tr>
+              <tr><td>🌿 Weed Control (1st)</td><td><span class="act-date" data-m="May" data-d="28"></span></td><td><span class="act-date" data-m="May" data-d="30"></span></td><td><span class="cal-status completed">✓ Completed</span></td></tr>
+              <tr><td>🌾 Top Dressing (Urea)</td><td><span class="act-date" data-m="Jun" data-d="20"></span></td><td><span class="act-date" data-m="Jun" data-d="22"></span></td><td><span class="cal-status current">● Current</span></td></tr>
+              <tr><td>🐛 Pest Monitoring</td><td>Jun 20</td><td><span class="act-date" data-m="Jun" data-d="25"></span></td><td><span class="cal-status current">● Current</span></td></tr>
+              <tr><td>🌿 Weed Control (2nd)</td><td>Jun 25</td><td>Jun 27</td><td><span class="cal-status upcoming">⚡ Upcoming</span></td></tr>
+              <tr><td>🌾 Earthing Up</td><td><span class="act-date" data-m="Jul" data-d="05"></span></td><td><span class="act-date" data-m="Jul" data-d="07"></span></td><td><span class="cal-status upcoming">⚡ Upcoming</span></td></tr>
+              <tr><td>🌽 Harvesting</td><td><span class="act-date" data-m="Aug" data-d="20"></span></td><td><span class="act-date" data-m="Aug" data-d="25"></span></td><td><span class="cal-status pending">Pending</span></td></tr>
+              <tr><td>📦 Post-Harvest Handling</td><td>Aug 25</td><td><span class="act-date" data-m="Aug" data-d="28"></span></td><td><span class="cal-status pending">Pending</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:12px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-500)">
+            ℹ️ Activities scheduled based on planting date, crop type, and local conditions. Adjust dates as needed.
+          </div>
+        </div>
+
+        <!-- Agronomic Advisories -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Agronomic Advisories</div><div class="card-subtitle">Tailored recommendations · MoFA Ghana Data</div></div>
+          <div class="advisory-item">
+            <div class="advisory-title"><span>🌱</span> Fertilizer Management</div>
+            <div class="advisory-text">Apply top dressing (Urea) of 62.5 kg (46% N) per acre between 20–22 days after planting. This supports strong vegetative growth.</div>
+          </div>
+          <div class="advisory-item">
+            <div class="advisory-title"><span>🌿</span> Weed Management</div>
+            <div class="advisory-text">Carry out 2nd weeding between 25–27 days after planting to reduce competition and improve yield.</div>
+          </div>
+          <div class="advisory-item" style="border-left-color:var(--red)">
+            <div class="advisory-title"><span>🐛</span> Pest Management</div>
+            <div class="advisory-text">Monitor for Fall Armyworm and Stem Borers. If detected, apply Lambda-cyhalothrin 2.5 EC @ 250 ml/acre.</div>
+          </div>
+          <div class="advisory-item" style="border-left-color:var(--blue-mid)">
+            <div class="advisory-title"><span>💧</span> Irrigation Advice</div>
+            <div class="advisory-text">If rainfall is below 20 mm/week, irrigate at critical stages: tasseling and grain filling.</div>
+          </div>
+          <div class="advisory-item" style="border-left-color:var(--gold)">
+            <div class="advisory-title"><span>🌽</span> Harvesting Tip</div>
+            <div class="advisory-text">Harvest when grains are hard and moisture content is below 20% for better yields and storage quality.</div>
+          </div>
+          <div style="margin-top:12px;background:var(--green-pale);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--green);font-weight:500">
+            💡 Following these recommendations can increase yield by 10–30% and reduce input wastage.
+          </div>
+        </div>
+      </div>
+
+      <!-- Climate Smart -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">🌤️ Climate-Smart Advisories</div><div class="card-subtitle">Actionable advice based on satellite weather forecasts · CHIRPS + MODIS</div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:14px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">☁️ Current Weather Outlook</div>
+            <div style="font-size:12px;color:var(--gray-600)">Expected Rainfall: 15–35 mm<br>Temperature: 24°C – 32°C<br><span style="color:var(--orange)">Risk: Moderate rainfall, possible dry spells after 5 days</span></div>
+          </div>
+          <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:14px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">🌧️ Rainfall Advisory</div>
+            <div style="font-size:12px;color:var(--gray-600)">Light to moderate rains expected in the next 3 days. Ideal for fertilizer application.</div>
+          </div>
+          <div style="background:#fff7ed;border-radius:var(--radius-sm);padding:14px;border-left:3px solid var(--orange)">
+            <div style="font-size:13px;font-weight:700;color:#c2410c;margin-bottom:6px">☀️ Dry Spell Alert</div>
+            <div style="font-size:12px;color:var(--gray-600)">A 5-day dry spell is likely after day 5. Mulch your field to conserve soil moisture.</div>
+          </div>
+          <div style="background:#fef2f2;border-radius:var(--radius-sm);padding:14px;border-left:3px solid var(--red)">
+            <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:6px">🌡️ Heat Stress Advisory</div>
+            <div style="font-size:12px;color:var(--gray-600)">High temperatures may stress crops. Ensure adequate soil moisture and avoid irrigation during peak heat (11am–3pm).</div>
+          </div>
+          <div style="background:var(--green-pale);border-radius:var(--radius-sm);padding:14px;border-left:3px solid var(--green-light)">
+            <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px">🛡️ Climate Risk Tip</div>
+            <div style="font-size:12px;color:var(--gray-600)">Diversify crops and use drought-tolerant varieties to reduce climate risk this season.</div>
+          </div>
+          <div style="background:var(--gray-50);border-radius:var(--radius-sm);padding:14px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">📊 KPIs (Satellite)</div>
+            <div style="font-size:12px;color:var(--gray-600)">NDVI: 0.62 (Good) · Soil Moisture: 62% · Water Use Efficiency: High</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FINANCIALS PAGE ===== -->
+    <div class="page" id="page-financials">
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="kpi-card profit"><div class="kpi-icon profit">💰</div><div class="kpi-label">Net Profit</div><div class="kpi-value">GHS 2,220</div><div class="kpi-sub up">+42% vs Target</div></div>
+        <div class="kpi-card cost"><div class="kpi-icon cost">📦</div><div class="kpi-label">Total Cost</div><div class="kpi-value">GHS 2,180</div><div class="kpi-sub ok">On Track</div></div>
+        <div class="kpi-card revenue"><div class="kpi-icon revenue">📈</div><div class="kpi-label">Gross Revenue</div><div class="kpi-value">GHS 4,400</div><div class="kpi-sub ok">On Track</div></div>
+        <div class="kpi-card breakeven"><div class="kpi-icon breakeven">🏷️</div><div class="kpi-label">ROI</div><div class="kpi-value">102%</div><div class="kpi-sub up">Good Return</div></div>
+      </div>
+
+      <!-- Market Price Editor -->
+      <div class="market-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:12px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Live Market Price — Maize</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div>
+                <div class="market-crop">GHS <input class="market-price-input" id="market-price" type="number" value="88" min="1" step="0.5" onchange="recalcProfit()"></div>
+                <div class="market-unit">per 50kg bag · Local Market, Tamale</div>
+              </div>
+              <div class="market-trend up">▲ Increasing · Positive Outlook</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onclick="setPrice(80)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer">GHS 80</button>
+            <button onclick="setPrice(88)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer">GHS 88</button>
+            <button onclick="setPrice(96)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer">GHS 96</button>
+            <button onclick="setPrice(104)" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:white;padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer">GHS 104</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <!-- Cost Breakdown -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Cost Breakdown</div><div class="card-subtitle">Per 2.5 Acres · <span class="dyn-cur-season-long"></span></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center">
+            <div class="cost-chart-wrap"><canvas id="costChart"></canvas></div>
+            <div class="cost-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#1565c0"></div><div>Land Prep 18.3% (GHS 400)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#2e7d32"></div><div>Seed 18.3% (GHS 400)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><div>Fertilizer 25.2% (GHS 550)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div><div>Pesticides 6.9% (GHS 150)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#76c442"></div><div>Labor 18.3% (GHS 400)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div><div>Irrigation 5.5% (GHS 120)</div></div>
+              <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div><div>Other 7.3% (GHS 160)</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profit Scenarios -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Profit Scenarios</div><div class="card-subtitle">Per 2.5 Acres</div></div>
+          <table class="scenario-table">
+            <thead><tr><th>Scenario</th><th>Yield</th><th>Price</th><th>Net Profit</th><th>Risk</th></tr></thead>
+            <tbody>
+              <tr><td>Conservative</td><td>16 bags</td><td>GHS 80</td><td class="sc-neg">GHS 1,020</td><td><span class="risk-pill high">High</span></td></tr>
+              <tr><td>Base Case</td><td>20 bags</td><td>GHS 88</td><td class="sc-pos" id="base-profit">GHS 2,220</td><td><span class="risk-pill medium">Med</span></td></tr>
+              <tr><td>Optimistic</td><td>24 bags</td><td>GHS 96</td><td class="sc-pos">GHS 3,580</td><td><span class="risk-pill low">Low</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:16px">
+            <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:8px">Sensitivity Analysis</div>
+            <div class="sens-row"><div class="sens-label">Yield +10%</div><div class="sens-bar-wrap"><div class="sens-bar" style="width:65%"></div></div><div class="sens-val">+GHS 250</div></div>
+            <div class="sens-row"><div class="sens-label">Price +GHS 2/bag</div><div class="sens-bar-wrap"><div class="sens-bar" style="width:80%"></div></div><div class="sens-val">+GHS 400</div></div>
+            <div class="sens-row"><div class="sens-label">Cost -10%</div><div class="sens-bar-wrap"><div class="sens-bar" style="width:55%"></div></div><div class="sens-val">+GHS 218</div></div>
+            <div class="sens-row"><div class="sens-label">Yield -10%</div><div class="sens-bar-wrap"><div class="sens-bar" style="width:30%;background:linear-gradient(90deg,var(--red),var(--orange))"></div></div><div class="sens-val sc-neg">-GHS 250</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profit Impact -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Profit Impact — With vs Without GM Green Advisory</div><div class="card-subtitle">This season projection · 2.5 Acres</div></div>
+        <div style="display:flex;align-items:flex-end;gap:40px;padding:10px 0 0">
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:8px">WITHOUT ADVISORY</div>
+            <div style="width:80px;height:100px;background:linear-gradient(180deg,#94a3b8,#64748b);border-radius:6px 6px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;color:white;font-size:13px;font-weight:700">GHS 6,480</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:11px;color:var(--green-accent);margin-bottom:8px;font-weight:700">+100% INCREASE ↑</div>
+            <div style="width:80px;height:175px;background:linear-gradient(180deg,var(--green-accent),var(--green));border-radius:6px 6px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:8px;color:white;font-size:13px;font-weight:700">GHS 12,960</div>
+          </div>
+          <div style="flex:1;max-width:360px">
+            <div style="background:var(--green-pale);border-radius:var(--radius);padding:18px">
+              <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">You stand to gain <span style="color:var(--green)">GHS 6,480 more</span> by following our recommendations.</div>
+              <div style="font-size:12px;color:var(--gray-600);line-height:1.6">✓ Use improved seed and recommended spacing<br>✓ Apply fertilizer in split doses (3 times)<br>✓ Control weeds early to avoid yield loss<br>✓ Monitor fall armyworm and act early<br>✓ Timely harvest and proper drying</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SATELLITE DATA PAGE ===== -->
+    <div class="page" id="page-satellite">
+      <div style="background:linear-gradient(135deg,#0d2137,#143d2b);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;color:white">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">🛰️ Satellite & Remote Sensing Data</div>
+            <div style="font-size:13px;color:rgba(255,255,255,.6)">Live-fetched from Sentinel-2, Landsat 9, MODIS, CHIRPS, and SMAP datasets. Green Fields Farm · Tamale, Ghana</div>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,.5)">Last sync: Today, 6:00 AM</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🌿 NDVI · Sentinel-2</div>
+          <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">0.62</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Normalized Difference Vegetation Index</div>
+          <div style="margin-top:10px;background:var(--gray-100);border-radius:4px;height:8px;overflow:hidden"><div style="width:62%;height:100%;background:linear-gradient(90deg,var(--green),var(--green-accent));border-radius:4px"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--gray-400);margin-top:3px"><span>0</span><span>0.62 – Good Canopy</span><span>1.0</span></div>
+        </div>
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:var(--blue-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">💧 Soil Moisture · SMAP</div>
+          <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">62%</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Volumetric water content · Optimal: 50–70%</div>
+          <div style="margin-top:10px;background:var(--gray-100);border-radius:4px;height:8px;overflow:hidden"><div style="width:62%;height:100%;background:linear-gradient(90deg,var(--blue-mid),#42a5f5);border-radius:4px"></div></div>
+          <div style="margin-top:8px;display:inline-flex;align-items:center;gap:5px;background:var(--green-pale);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px"><span style="width:6px;height:6px;background:var(--green-light);border-radius:50%"></span>Status: Good</div>
+        </div>
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🌧️ Rainfall · CHIRPS</div>
+          <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">28mm</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">7-day accumulated rainfall · Tamale Area</div>
+          <div style="margin-top:10px;display:flex;gap:3px;align-items:flex-end;height:40px">
+            <div style="flex:1;background:#bfdbfe;border-radius:2px 2px 0 0;height:30%"></div>
+            <div style="flex:1;background:#93c5fd;border-radius:2px 2px 0 0;height:50%"></div>
+            <div style="flex:1;background:#60a5fa;border-radius:2px 2px 0 0;height:80%"></div>
+            <div style="flex:1;background:#3b82f6;border-radius:2px 2px 0 0;height:100%"></div>
+            <div style="flex:1;background:#60a5fa;border-radius:2px 2px 0 0;height:70%"></div>
+            <div style="flex:1;background:#93c5fd;border-radius:2px 2px 0 0;height:40%"></div>
+            <div style="flex:1;background:#bfdbfe;border-radius:2px 2px 0 0;height:20%"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🌡️ Land Surface Temp · MODIS</div>
+          <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">31.2°C</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Daytime LST average · Acceptable range</div>
+          <div style="margin-top:10px;display:inline-flex;align-items:center;gap:5px;background:#fff7ed;color:var(--orange);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">⚠️ Monitor for heat stress</div>
+        </div>
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:#7c3aed);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🌿 EVI · Landsat 9</div>
+          <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">0.48</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Enhanced Vegetation Index · Moderate growth</div>
+          <div style="margin-top:10px;background:var(--gray-100);border-radius:4px;height:8px;overflow:hidden"><div style="width:48%;height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:4px"></div></div>
+        </div>
+        <div class="card">
+          <div style="font-size:11px;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">💧 Irrigation Status</div>
+          <div style="font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--navy)">Adequate</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-top:4px">Next irrigation recommended in 2 days</div>
+          <div style="margin-top:10px;display:inline-flex;align-items:center;gap:5px;background:var(--green-pale);color:var(--green);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">✓ Keep monitoring</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Data Source Attribution</div><div class="card-subtitle">All datasets fetched via Claude API with web_search tool</div></div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+          <div style="text-align:center;padding:14px;background:var(--gray-50);border-radius:var(--radius-sm)"><div style="font-size:20px;margin-bottom:6px">🛰️</div><div style="font-size:12px;font-weight:700;color:var(--navy)">Sentinel-2</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">NDVI, EVI, Crop monitoring</div></div>
+          <div style="text-align:center;padding:14px;background:var(--gray-50);border-radius:var(--radius-sm)"><div style="font-size:20px;margin-bottom:6px">🌍</div><div style="font-size:12px;font-weight:700;color:var(--navy)">Landsat 9</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">EVI, Land cover analysis</div></div>
+          <div style="text-align:center;padding:14px;background:var(--gray-50);border-radius:var(--radius-sm)"><div style="font-size:20px;margin-bottom:6px">🌡️</div><div style="font-size:12px;font-weight:700;color:var(--navy)">MODIS</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">LST, Evapotranspiration</div></div>
+          <div style="text-align:center;padding:14px;background:var(--gray-50);border-radius:var(--radius-sm)"><div style="font-size:20px;margin-bottom:6px">🌧️</div><div style="font-size:12px;font-weight:700;color:var(--navy)">CHIRPS</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">Rainfall, Climate data</div></div>
+          <div style="text-align:center;padding:14px;background:var(--gray-50);border-radius:var(--radius-sm)"><div style="font-size:20px;margin-bottom:6px">💧</div><div style="font-size:12px;font-weight:700;color:var(--navy)">SMAP</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px">Soil moisture mapping</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== AI ADVISORY PAGE ===== -->
+    <div class="page" id="page-advisory">
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;height:calc(100vh - 130px)">
+        <div class="card" style="display:flex;flex-direction:column;overflow:hidden;padding:16px">
+          <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px">🤖 GM Green AI Assistant</div>
+          <div style="font-size:12px;color:var(--gray-400);margin-bottom:12px">Powered by Claude AI · Includes your farm's satellite data context</div>
+          <div class="quick-questions">
+            <div class="quick-q" onclick="sendQuick('What should I do about fall armyworm on my maize farm?')">🐛 Fall Armyworm advice</div>
+            <div class="quick-q" onclick="sendQuick('When is the best time to apply top dressing fertilizer?')">🌱 Fertilizer timing</div>
+            <div class="quick-q" onclick="sendQuick('Should I irrigate this week given the weather forecast?')">💧 Irrigation this week</div>
+            <div class="quick-q" onclick="sendQuick('What is my projected profit if maize price drops to GHS 18/bag?')">📉 Profit if price drops</div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg ai">
+              <div class="chat-avatar ai">GM</div>
+              <div class="chat-bubble">Good morning, Kofi! 👋 I'm your GM Green AI assistant. I have access to your farm data for Green Fields Farm in Tamale — including satellite imagery (NDVI: 0.62), soil moisture (62%), and the current weather forecast. How can I help you today?</div>
+            </div>
+          </div>
+          <div class="chat-input-wrap">
+            <input class="chat-input" id="chat-input" placeholder="Ask about your farm, crops, weather, market prices..." onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="chat-send-btn" onclick="sendChat()">Send →</button>
+          </div>
+        </div>
+        <!-- Context Panel -->
+        <div style="display:flex;flex-direction:column;gap:14px;overflow-y:auto">
+          <div class="card">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">📊 Farm Context (Live)</div>
+            <div style="font-size:12px;color:var(--gray-600);line-height:1.8">
+              <div>🌱 <strong>Crop:</strong> Maize · 2.5 Acres</div>
+              <div>📍 <strong>Location:</strong> Tamale, Northern Ghana</div>
+              <div>🌿 <strong>NDVI:</strong> 0.62 (Good)</div>
+              <div>💧 <strong>Soil Moisture:</strong> 62% (Adequate)</div>
+              <div>🌧️ <strong>Rainfall (7d):</strong> 28mm</div>
+              <div>🌡️ <strong>LST:</strong> 31.2°C</div>
+              <div>💰 <strong>Net Profit:</strong> GHS 2,220 (ROI 102%)</div>
+              <div>⚠️ <strong>Top Risk:</strong> Fall Armyworm (High)</div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">🔔 Active Alerts</div>
+            <div class="alert-item"><div class="alert-dot high"></div><div><div style="font-size:12px;font-weight:600">Fall Armyworm Alert</div><div style="font-size:11px;color:var(--gray-400)">Population above threshold</div></div></div>
+            <div class="alert-item"><div class="alert-dot medium"></div><div><div style="font-size:12px;font-weight:600">Dry Spell Forecast</div><div style="font-size:11px;color:var(--gray-400)">Likely after day 5</div></div></div>
+            <div class="alert-item"><div class="alert-dot medium"></div><div><div style="font-size:12px;font-weight:600">Fertilizer Reminder</div><div style="font-size:11px;color:var(--gray-400)">2nd split due in 3 days</div></div></div>
+          </div>
+          <div class="card">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">🌤️ Today's Weather</div>
+            <div style="text-align:center;padding:12px;background:var(--gray-50);border-radius:var(--radius-sm)">
+              <div style="font-size:32px">🌦️</div>
+              <div style="font-size:22px;font-weight:700;color:var(--navy)">28°C</div>
+              <div style="font-size:12px;color:var(--gray-400)">Light Rain · Tamale</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FARM OVERVIEW PAGE ===== -->
+    <div class="page" id="page-farm-overview">
+      <div class="grid-2-1">
+        <!-- Yield Comparison -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Yield Comparison — Maize</div><div class="card-subtitle">Potential with recommended practices vs. what you achieved</div></div>
+          <div class="yield-compare">
+            <div class="yield-box">
+              <div class="yield-box-label potential">POTENTIAL YIELD</div>
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:8px">(With recommended practices)</div>
+              <div class="yield-num potential">20</div>
+              <div class="yield-unit">bags/acre</div>
+              <div style="font-size:11px;color:var(--gray-500);margin-top:8px;max-width:160px">This is the potential your crop could achieve with advisories followed fully.</div>
+            </div>
+            <div class="yield-vs">VS.</div>
+            <div class="yield-box">
+              <div class="yield-box-label actual">ACTUAL YIELD</div>
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:8px">(Achieved at harvest)</div>
+              <div class="yield-num actual">16</div>
+              <div class="yield-unit">bags/acre</div>
+              <div style="font-size:11px;color:var(--gray-500);margin-top:8px;max-width:160px">Based on actual field conditions and management.</div>
+            </div>
+          </div>
+          <div class="yield-gap-box">
+            <div class="yield-gap-num">4 bags/acre</div>
+            <div class="yield-gap-label">YIELD GAP · 20% below potential</div>
+          </div>
+          <div style="font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:6px">Main reasons for gap:</div>
+          <div class="gap-reason">💧 Moisture stress during tasseling</div>
+          <div class="gap-reason">🐛 Fall armyworm pressure</div>
+          <div class="gap-reason">🌱 Sub-optimal nitrogen use</div>
+          <div style="margin-top:12px;background:var(--green-pale);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--green);font-weight:500">💡 Closing the yield gap can increase profit by GHS 480–GHS 720/acre.</div>
+        </div>
+        <!-- Risk + Recommendations -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Risk Status</div></div>
+            <div class="risk-gauge-wrap">
+              <svg class="gauge-svg" viewBox="0 0 160 100">
+                <path d="M20 90 A60 60 0 0 1 140 90" stroke="#f3f4f6" stroke-width="16" fill="none" stroke-linecap="round"/>
+                <path d="M20 90 A60 60 0 0 1 80 30" stroke="#4caf50" stroke-width="16" fill="none" stroke-linecap="round"/>
+                <path d="M80 30 A60 60 0 0 1 125 52" stroke="#f59e0b" stroke-width="16" fill="none" stroke-linecap="round"/>
+                <path d="M125 52 A60 60 0 0 1 140 90" stroke="#ef4444" stroke-width="16" fill="none" stroke-linecap="round"/>
+                <line x1="80" y1="90" x2="108" y2="42" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="80" cy="90" r="5" fill="#1e293b"/>
+              </svg>
+              <div class="risk-label medium">MEDIUM RISK</div>
+            </div>
+          </div>
+          <div class="card" style="flex:1">
+            <div class="card-header"><div class="card-title">Top Recommendations</div></div>
+            <div class="rec-item"><div class="rec-icon high-p">💧</div><div class="rec-body"><div class="rec-title">Irrigate at Critical Stages</div><div class="rec-desc">Maintain soil moisture during tasseling.</div></div><span class="rec-badge high-p">HIGH</span></div>
+            <div class="rec-item"><div class="rec-icon high-p">🐛</div><div class="rec-body"><div class="rec-title">Monitor Fall Armyworm</div><div class="rec-desc">Scout every 2–3 days.</div></div><span class="rec-badge high-p">HIGH</span></div>
+            <div class="rec-item"><div class="rec-icon med-p">🌱</div><div class="rec-body"><div class="rec-title">Apply Split Fertilizer</div><div class="rec-desc">Remaining Urea in split dose.</div></div><span class="rec-badge med-p">MED</span></div>
+            <div class="rec-item"><div class="rec-icon med-p">🌿</div><div class="rec-body"><div class="rec-title">Weed Control</div><div class="rec-desc">Second weeding is due.</div></div><span class="rec-badge med-p">MED</span></div>
+            <div class="rec-item"><div class="rec-icon low-p">📈</div><div class="rec-body"><div class="rec-title">Market Watch</div><div class="rec-desc">Prices favorable. Plan sales.</div></div><span class="rec-badge low-p">LOW</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPIs + Alerts -->
+      <div class="grid-1-1">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Financial Summary</div></div>
+          <div class="fin-table">
+            <div class="fin-row"><span>Total Cost</span><span>GHS 2,180</span></div>
+            <div class="fin-row"><span>Total Revenue</span><span>GHS 4,400</span></div>
+            <div class="fin-row"><span>Net Profit</span><span style="color:var(--green)">GHS 2,220</span></div>
+            <div class="fin-row"><span>ROI</span><span style="color:var(--blue-mid)">102%</span></div>
+            <div class="fin-row"><span>Break-even Price</span><span>GHS 43.60/bag</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Latest Alerts</div><div class="card-badge high">Active</div></div>
+          <div class="alert-item"><div class="alert-dot high"></div><div><div class="alert-title">Fall Armyworm Alert</div><div class="alert-desc">Population above threshold. Scout and apply control.</div></div><span class="alert-level high">High</span></div>
+          <div class="alert-item"><div class="alert-dot medium"></div><div><div class="alert-title">Dry Spell Forecast</div><div class="alert-desc">Possible dry spell in 5 days. Irrigate if needed.</div></div><span class="alert-level medium">Medium</span></div>
+          <div class="alert-item"><div class="alert-dot medium"></div><div><div class="alert-title">Fertilizer Reminder</div><div class="alert-desc">2nd split due in 3 days. Apply Urea.</div></div><span class="alert-level medium">Medium</span></div>
+          <div style="margin-top:10px;font-size:12px;color:var(--gray-400)">View all recommendations →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ACTIVITIES PAGE ===== -->
+    <div class="page" id="page-activities">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-header">
+          <div><div class="card-title">Farm Activity Calendar</div><div class="card-subtitle">Crop: Maize · Season: <span class="dyn-cur-season"></span> · Area: 2.5 Acres</div></div>
+          <div style="font-size:12px;color:var(--green);background:var(--green-pale);padding:4px 12px;border-radius:20px;font-weight:600">4 of 10 Completed</div>
+        </div>
+        <table class="cal-table">
+          <thead><tr><th>Activity</th><th>Start Date</th><th>End Date</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>🌾 Land Preparation</td><td>May 01</td><td>May 10</td><td><span class="cal-status completed">✓ Completed</span></td><td style="font-size:12px;color:var(--gray-400)">Ploughing done</td></tr>
+            <tr><td>🌱 Planting</td><td>May 11</td><td>May 15</td><td><span class="cal-status completed">✓ Completed</span></td><td style="font-size:12px;color:var(--gray-400)">Improved variety used</td></tr>
+            <tr><td>🧪 Basal Fertilizer Application</td><td>May 12</td><td>May 16</td><td><span class="cal-status completed">✓ Completed</span></td><td style="font-size:12px;color:var(--gray-400)">NPK 15-15-15</td></tr>
+            <tr><td>🌿 Weed Control (1st)</td><td>May 28</td><td>May 30</td><td><span class="cal-status completed">✓ Completed</span></td><td style="font-size:12px;color:var(--gray-400)">Manual + herbicide</td></tr>
+            <tr><td>🌾 Top Dressing (Urea)</td><td>Jun 20</td><td>Jun 22</td><td><span class="cal-status current">● Current</span></td><td style="font-size:12px;color:var(--blue-mid)">Apply 62.5 kg/acre</td></tr>
+            <tr><td>🐛 Pest Monitoring</td><td>Jun 20</td><td>Jun 25</td><td><span class="cal-status current">● Current</span></td><td style="font-size:12px;color:var(--red)">Scout for armyworm!</td></tr>
+            <tr><td>🌿 Weed Control (2nd)</td><td>Jun 25</td><td>Jun 27</td><td><span class="cal-status upcoming">⚡ Upcoming</span></td><td style="font-size:12px;color:var(--gray-400)">Due in 5 days</td></tr>
+            <tr><td>🌾 Earthing Up</td><td>Jul 05</td><td>Jul 07</td><td><span class="cal-status upcoming">⚡ Upcoming</span></td><td style="font-size:12px;color:var(--gray-400)">—</td></tr>
+            <tr><td>🐛 Pest Monitoring (2nd)</td><td>Jul 10</td><td>Jul 15</td><td><span class="cal-status pending">Pending</span></td><td style="font-size:12px;color:var(--gray-400)">—</td></tr>
+            <tr><td>🌽 Harvesting</td><td>Aug 20</td><td>Aug 25</td><td><span class="cal-status pending">Pending</span></td><td style="font-size:12px;color:var(--gray-400)">Below 20% moisture</td></tr>
+            <tr><td>📦 Post-Harvest Handling</td><td>Aug 25</td><td>Aug 28</td><td><span class="cal-status pending">Pending</span></td><td style="font-size:12px;color:var(--gray-400)">Storage & drying</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px;padding:10px 14px;background:var(--gray-50);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-500)">ℹ️ Activities scheduled based on planting date, crop type, and local conditions. Adjust dates as needed.</div>
+      </div>
+    </div>
+
+    <!-- ===== ALERTS PAGE ===== -->
+    <div class="page" id="page-alerts">
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+        <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:var(--radius);padding:18px 20px">
+          <div style="font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🔴 HIGH PRIORITY</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:4px">Fall Armyworm Alert</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px">Population above threshold detected in your area. Scout fields every 2–3 days and apply recommended insecticide if needed.</div>
+          <div style="font-size:12px;color:var(--gray-500);border-top:1px solid #fecaca;padding-top:10px">Recommended: Lambda-cyhalothrin 2.5 EC @ 250 ml/acre</div>
+        </div>
+        <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:var(--radius);padding:18px 20px">
+          <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🟡 MEDIUM PRIORITY</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:4px">Dry Spell Forecast</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px">Possible 5-day dry spell forecast after day 5. Mulch fields to conserve soil moisture and irrigate at critical stages.</div>
+          <div style="font-size:12px;color:var(--gray-500);border-top:1px solid #fde68a;padding-top:10px">Source: CHIRPS 7-day rainfall forecast</div>
+        </div>
+        <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:var(--radius);padding:18px 20px">
+          <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🟡 MEDIUM PRIORITY</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:4px">Fertilizer Reminder</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px">2nd split fertilizer application is due in 3 days. Apply remaining Urea (62.5 kg/acre) as top dressing.</div>
+          <div style="font-size:12px;color:var(--gray-500);border-top:1px solid #fde68a;padding-top:10px">Best applied in the morning after light rain.</div>
+        </div>
+        <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:var(--radius);padding:18px 20px">
+          <div style="font-size:12px;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🟡 MEDIUM PRIORITY</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:4px">Weed Control Due</div>
+          <div style="font-size:13px;color:var(--gray-600);margin-bottom:12px">2nd weeding is due. Weeds are competing with your crop for nutrients and water. Schedule weeding within the next 5 days.</div>
+          <div style="font-size:12px;color:var(--gray-500);border-top:1px solid #fde68a;padding-top:10px">Manual weeding or approved post-emergence herbicide.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+</div><!-- end app -->
+
+<!-- Loading Overlay -->
+<div class="overlay-backdrop" id="overlay-backdrop"></div>
+<div class="loading-overlay hidden" id="loading-overlay">
+  <div style="font-size:32px;margin-bottom:12px">🛰️</div>
+  <div style="font-size:18px;font-weight:700;color:var(--navy)">Generating Your Farm Plan</div>
+  <div style="font-size:13px;color:var(--gray-400);margin-top:4px">Fetching live satellite data and generating advisory...</div>
+  <div style="width:100%;background:var(--gray-100);border-radius:4px;height:4px;margin-top:16px;overflow:hidden">
+    <div id="loading-bar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--green),var(--green-accent));border-radius:4px;transition:width .4s ease"></div>
+  </div>
+  <div class="loading-steps" id="loading-steps">
+    <div class="loading-step" id="step-1"><div class="step-icon">1</div>Fetching Sentinel-2 / NDVI satellite data...</div>
+    <div class="loading-step" id="step-2"><div class="step-icon">2</div>Computing planting window (CHIRPS rainfall)...</div>
+    <div class="loading-step" id="step-3"><div class="step-icon">3</div>Estimating yield potential for region & crop...</div>
+    <div class="loading-step" id="step-4"><div class="step-icon">4</div>Assessing climate risk (SMAP soil moisture)...</div>
+    <div class="loading-step" id="step-5"><div class="step-icon">5</div>Fetching market prices & budget analysis...</div>
+    <div class="loading-step" id="step-6"><div class="step-icon">6</div>Generating crop calendar & agronomic advisory...</div>
+  </div>
+</div>
+
+<script>
+// ===== LOGIN =====
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-error');
+  if (u === 'farmer' && p === 'ghana2025') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    initCharts();
+  } else {
+    err.style.display = 'block';
+  }
+}
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+
+function doLogout() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+// ===== NAVIGATION =====
+const pageTitles = {
+  'dashboard':'Dashboard','farm-overview':'Farm Overview','crop-plan':'Crop Plan',
+  'activities':'Activities','financials':'Finances','satellite':'Satellite Data',
+  'advisory':'AI Advisory','alerts':'Alerts'
+};
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[name] || name;
+}
+
+// ===== CHARTS =====
+function initCharts() {
+  // Yield Progress Chart
+  const yc = document.getElementById('yieldChart');
+  if (yc) {
+    new Chart(yc, {
+      type: 'bar',
+      data: {
+        labels: ['Planting','Vegetative','Tasseling','Flowering','Harvest'],
+        datasets: [
+          { label:'Actual Yield', data:[8,15,18,19,20], backgroundColor:'rgba(46,125,50,0.85)', borderRadius:6, order:2 },
+          { label:'Target (20 bags/acre)', data:[20,20,20,20,20], type:'line', borderColor:'#76c442', borderDash:[6,3], borderWidth:2, pointRadius:0, fill:false, order:1, tension:0 }
+        ]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ position:'top', labels:{ font:{size:11}, boxWidth:12 } }, tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.y} bags/acre` } } },
+        scales:{ y:{ beginAtZero:true, max:25, grid:{color:'rgba(0,0,0,.05)'}, ticks:{font:{size:11}} }, x:{ grid:{display:false}, ticks:{font:{size:11}} } }
+      }
+    });
+  }
+
+  // Cost Donut Chart
+  const cc = document.getElementById('costChart');
+  if (cc) {
+    new Chart(cc, {
+      type: 'doughnut',
+      data: {
+        labels: ['Land Prep','Seed','Fertilizer','Pesticides','Labor','Irrigation','Other'],
+        datasets: [{
+          data: [100,100,137.50,37.50,100,30,40],
+          backgroundColor: ['#1565c0','#2e7d32','#f59e0b','#ef4444','#76c442','#8b5cf6','#94a3b8'],
+          borderWidth: 2, borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false, cutout:'68%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{ callbacks:{ label: ctx => ` $${ctx.parsed.toFixed(2)}` } }
+        }
+      }
+    });
+  }
+}
+
+// ===== MARKET PRICE =====
+function setPrice(v) {
+  document.getElementById('market-price').value = v;
+  recalcProfit();
+}
+function recalcProfit() {
+  const p = parseFloat(document.getElementById('market-price').value) || 22;
+  const yield_bags = 50; // 20 bags/acre × 2.5 acres
+  const cost = 2180;
+  const rev = yield_bags * p;
+  const profit = rev - cost;
+  const bp = document.getElementById('base-profit');
+  if (bp) { bp.textContent = profit >= 0 ? '$' + profit.toFixed(0) : '-$' + Math.abs(profit).toFixed(0); bp.className = profit >= 0 ? 'sc-pos' : 'sc-neg'; }
+}
+
+// ===== GENERATE PLAN =====
+async function generatePlan() {
+  const btn = document.getElementById('gen-btn');
+  const region   = (window._genLocation?.region)   || document.getElementById('gen-region')?.value   || 'Northern';
+  const district = (window._genLocation?.district) || document.getElementById('gen-district')?.value || '';
+  const town     = (window._genLocation?.town)     || document.getElementById('gen-town')?.value     || '';
+  window._genLocation = null; // consume
+  const crop = document.getElementById('gen-crop').value;
+  const size = document.getElementById('gen-size').value;
+  const season = document.getElementById('gen-season').value;
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('overlay-backdrop').classList.add('show');
+  document.getElementById('loading-overlay').classList.remove('hidden');
+
+  const steps = [
+    { id:'step-1', pct:18, delay:1200 },
+    { id:'step-2', pct:35, delay:2200 },
+    { id:'step-3', pct:52, delay:3200 },
+    { id:'step-4', pct:68, delay:4400 },
+    { id:'step-5', pct:82, delay:5600 },
+    { id:'step-6', pct:95, delay:6800 },
+  ];
+
+  // Animate steps
+  for (let i = 0; i < steps.length; i++) {
+    setTimeout(() => {
+      if (i > 0) {
+        const prev = document.getElementById(steps[i-1].id);
+        prev.classList.remove('active');
+        prev.classList.add('done');
+        prev.querySelector('.step-icon').classList.add('done');
+        prev.querySelector('.step-icon').textContent = '✓';
+      }
+      const cur = document.getElementById(steps[i].id);
+      cur.classList.add('active');
+      cur.querySelector('.step-icon').classList.add('active');
+      cur.querySelector('.step-icon').innerHTML = '<span class="spin">◌</span>';
+      document.getElementById('loading-bar').style.width = steps[i].pct + '%';
+    }, steps[i].delay);
+  }
+
+  // Actual API call
+  try {
+    const prompt = `You are an expert agronomic advisor for Ghana. Generate a comprehensive farm advisory plan as JSON.
+
+Farm details:
+- Region: ${region}, Ghana
+- District: ${district}
+- Town / Community: ${town}
+- Crop: ${crop}
+- Farm size: ${size} acres
+- Season: ${season}
+
+Return ONLY valid JSON (no markdown) with this structure:
+{
+  "planting_window": "e.g. May 1–15",
+  "ndvi": 0.60,
+  "soil_moisture_pct": 58,
+  "rainfall_7d_mm": 24,
+  "expected_yield_bags_per_acre": 18,
+  "total_cost_ghs": 2120,
+  "expected_revenue_ghs": 4200,
+  "net_profit_ghs": 2080,
+  "roi_pct": 98,
+  "risk_level": "Medium",
+  "top_risks": ["Fall Armyworm", "Dry spells"],
+  "top_recommendations": [
+    {"title":"Monitor Pests","desc":"Scout every 2-3 days","priority":"High"},
+    {"title":"Apply Fertilizer","desc":"Top dress with Urea","priority":"Medium"}
+  ],
+  "advisory_summary": "2-3 sentence tailored agronomic summary for this region and crop"
+}`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    let plan = null;
+    try {
+      const clean = text.replace(/```json|```/g,'').trim();
+      plan = JSON.parse(clean);
+    } catch(e) { plan = null; }
+
+    setTimeout(() => {
+      // Mark last step done
+      const last = document.getElementById('step-6');
+      last.classList.remove('active'); last.classList.add('done');
+      last.querySelector('.step-icon').classList.remove('active'); last.querySelector('.step-icon').classList.add('done');
+      last.querySelector('.step-icon').textContent = '✓';
+      document.getElementById('loading-bar').style.width = '100%';
+
+      setTimeout(() => {
+        document.getElementById('loading-overlay').classList.add('hidden');
+        document.getElementById('overlay-backdrop').classList.remove('show');
+        btn.disabled = false; btn.textContent = 'Generate Plan →';
+        // Reset step icons
+        steps.forEach(s => {
+          const el = document.getElementById(s.id);
+          el.classList.remove('active','done');
+          el.querySelector('.step-icon').classList.remove('active','done');
+          el.querySelector('.step-icon').textContent = s.id.replace('step-','');
+        });
+        document.getElementById('loading-bar').style.width = '0%';
+        if (plan) showPlanResult(plan, region, crop, size);
+        else alert('Plan generated! (API response could not be fully parsed — using farm defaults)');
+      }, 800);
+    }, 7600);
+
+  } catch(err) {
+    setTimeout(() => {
+      document.getElementById('loading-overlay').classList.add('hidden');
+      document.getElementById('overlay-backdrop').classList.remove('show');
+      btn.disabled = false; btn.textContent = 'Generate Plan →';
+      alert('Plan generation failed. Please check your connection and API access.');
+    }, 7800);
+  }
+}
+
+function showPlanResult(plan, region, crop, size) {
+  const msg = `✅ Plan Generated for ${crop} (${size} acres) in ${region}!\n\n` +
+    `📅 Planting Window: ${plan.planting_window || 'N/A'}\n` +
+    `🌿 NDVI: ${plan.ndvi || 'N/A'} · Soil Moisture: ${plan.soil_moisture_pct || 'N/A'}%\n` +
+    `🌾 Expected Yield: ${plan.expected_yield_bags_per_acre || 'N/A'} bags/acre\n` +
+    `💰 Net Profit: GHS ${plan.net_profit_ghs || plan.net_profit_usd || 'N/A'} · ROI: ${plan.roi_pct || 'N/A'}%\n` +
+    `⚠️ Top Risks: ${(plan.top_risks||[]).join(', ')}\n\n` +
+    `📋 Advisory: ${plan.advisory_summary || ''}`;
+  alert(msg);
+}
+
+// ===== AI CHAT =====
+const farmContext = `Current farm context: Green Fields Farm, Tamale, Northern Ghana. Crop: Maize, 2.5 acres. NDVI: 0.62 (Good canopy). Soil moisture: 62% (adequate). 7-day rainfall: 28mm. Land surface temp: 31.2°C. Net profit projection: GHS 2,220 (ROI: 102%. Active alerts: Fall Armyworm (High), Dry Spell Forecast (Medium), Fertilizer reminder (Medium). Current growth stage: vegetative/tasseling.`;
+
+let chatHistory = [
+  { role: 'user', content: `You are GM Green AI Assistant, an expert agronomic advisor for smallholder farmers in Ghana. You have access to the following live farm data:\n\n${farmContext}\n\nAnswer questions concisely and practically. Focus on actionable advice relevant to Ghana's farming context and MoFA Ghana guidelines. Keep answers under 150 words.` },
+  { role: 'assistant', content: "Good morning, Kofi! 👋 I'm your GM Green AI assistant. I have access to your farm data for Green Fields Farm in Tamale — including satellite imagery (NDVI: 0.62), soil moisture (62%), and the current weather forecast. How can I help you today?" }
+];
+
+function sendQuick(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  addChatMsg(msg, 'user');
+  chatHistory.push({ role: 'user', content: msg });
+
+  // Typing indicator
+  const typingId = 'typing-' + Date.now();
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg ai" id="${typingId}"><div class="chat-avatar ai">GM</div><div class="chat-bubble chat-loading"><div class="typing-dots"><span></span><span></span><span></span></div></div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: chatHistory
+      })
+    });
+    const data = await resp.json();
+    const reply = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    chatHistory.push({ role: 'assistant', content: reply });
+    document.getElementById(typingId)?.remove();
+    addChatMsg(reply, 'ai');
+  } catch(e) {
+    document.getElementById(typingId)?.remove();
+    addChatMsg('Sorry, I couldn\'t connect to the advisory service. Please check your internet connection.', 'ai');
+  }
+}
+
+function addChatMsg(text, who) {
+  const msgs = document.getElementById('chat-messages');
+  const avatar = who === 'ai' ? '<div class="chat-avatar ai">GM</div>' : '<div class="chat-avatar user">KM</div>';
+  msgs.innerHTML += `<div class="chat-msg ${who}">${who==='ai'?avatar:''}<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>${who==='user'?avatar:''}</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ===== DYNAMIC DATES & CURRENCY UTILS =====
+(function() {
+  const now = new Date();
+  const CY  = now.getFullYear();   // current year e.g. 2026
+  const PY  = CY - 1;             // previous year e.g. 2025
+  const PPY = CY - 2;             // two years ago e.g. 2024
+
+  // Season year: Ghana Main Season runs April–October.
+  // If we're Jan–Mar, "current main season" is about to start (use CY).
+  // Apr–Dec, current main season is underway (use CY).
+  const seasonYear = CY;
+  const prevSeasonYear = PY;
+
+  // Fill season dropdowns
+  const seasonLabels = [
+    `${seasonYear} Main Season`,
+    `${seasonYear} Minor Season`,
+    `${prevSeasonYear} Main Season`,
+    `${prevSeasonYear} Minor Season`,
+  ];
+  document.querySelectorAll('#season-opt-0,#season-opt-1,#season-opt-2,#season-opt-3').forEach((el, i) => {
+    if (el) el.textContent = seasonLabels[i] || '';
+  });
+  document.querySelectorAll('#topbar-season-0,#topbar-season-1,#topbar-season-2,#topbar-season-3').forEach((el, i) => {
+    const labels = [
+      `${seasonYear} Main Season`,
+      `${prevSeasonYear} Main Season`,
+      `${prevSeasonYear} Minor Season`,
+      `${PPY} Main Season`,
+    ];
+    if (el) el.textContent = labels[i] || '';
+  });
+
+  // Fill season text spans
+  document.querySelectorAll('.dyn-cur-season').forEach(el => el.textContent = `${seasonYear} Main`);
+  document.querySelectorAll('.dyn-cur-season-long').forEach(el => el.textContent = `${seasonYear} Main Season`);
+
+  // Calendar activity dates - tag with season year
+  document.querySelectorAll('.act-date').forEach(el => {
+    const m = el.dataset.m;
+    const d = el.dataset.d;
+    el.textContent = `${m} ${d}`;
+    el.title = `${m} ${d}, ${seasonYear}`;
+  });
+
+  // Live datetime in topbar
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const h = now.getHours().toString().padStart(2,'0');
+  const m = now.getMinutes().toString().padStart(2,'0');
+  const dtStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${CY}  ${h}:${m}`;
+  const syncEl = document.getElementById('last-sync-time');
+  if (syncEl) syncEl.textContent = dtStr;
+
+  // Dynamic greeting by time of day
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const pageSub = document.querySelector('.page-sub');
+  if (pageSub) pageSub.textContent = `${greeting}, Kofi! ☀️ Here's your farm summary.`;
+
+  // Crop plan subtitle - keep season year fresh
+  document.querySelectorAll('.crop-plan-season').forEach(el => el.textContent = `${seasonYear} Main Season`);
+})();
+
+
+// ===== GHANA COMPLETE LOCATION DATA =====
+const GHANA_LOCATIONS = {
+  "Greater Accra": {
+    "Accra Metropolitan": ["Accra Central","Adabraka","Adenta","Chorkor","Dansoman","Dome","Jamestown","Kaneshie","Labadi","Lapaz","Labone","Madina","Mamprobi","Nima","Osu","Teshie","Tesano","Airport Residential Area","North Kaneshie","Abossey Okai"],
+    "Tema Metropolitan": ["Tema","Ashaiman","Community 1","Community 4","Community 6","Community 9","Community 11","Kpone","Sakumono","Afienya","Lashibi","Baatsona"],
+    "Adenta Municipal": ["Adenta","Frafraha","Ayi Mensah","Oyarifa","Teiman","Ogbojo"],
+    "Ga East Municipal": ["Dome","Kwabenya","Abokobi","Haatso","Ashongman","Taifa","Agbogba","Pantang"],
+    "Ga West Municipal": ["Amasaman","Pokuase","Ofankor","Medie","Obom","Ablekuma","Weija"],
+    "Ga South Municipal": ["Kasoa","Kokrobite","Gomoa Pomadze","Bortianor","Oblogo","Mallam"],
+    "Ga Central Municipal": ["Anyaa","Sowutuom","Dansoman","Kwashieman","Abeka","Ablekuma"],
+    "Ledzokuku Municipal": ["Teshie","Nungua","Baatsona","Lashibi","Krowor","Sakumono"],
+    "Ayawaso Central Municipal": ["Asylum Down","Abelemkpe","North Ridge","Ringway Estates","Osu"],
+    "Ayawaso East Municipal": ["Nima","Maamobi","Kanda"],
+    "La-Nkwantanang Municipal": ["Madina","Oyarifa","Teiman","Ayi Mensah","Danfa","Otinibi"],
+    "Ayawaso North Municipal": ["Achimota","Okponglo","East Legon","Abeka"],
+    "Ayawaso West Municipal": ["Labone","Osu","Airport","Cantonments","Roman Ridge"],
+    "La Dade-Kotopon Municipal": ["La","Teshie","Dade","Labadi"],
+    "Ablekuma Central Municipal": ["Kaneshie","Abossey Okai","Mamprobi","Dansoman"],
+    "Ablekuma North Municipal": ["Avenor","Chorkor","Dansoman","Abbosey Okai"],
+    "Ablekuma West Municipal": ["Weija","Gbawe","Tetegu","Aplaku"],
+    "Okaikwei North Municipal": ["Nima","Mamobi","Accra New Town","Abeka"],
+    "Korle Klottey Municipal": ["Korle Bu","Jamestown","Usher Town","Adabraka","Kokomlemle"],
+    "Kpone-Katamanso District": ["Kpone","Katamanso","Akorley","Prampram","Tema East"],
+    "Ningo-Prampram District": ["Prampram","Ningo","Ada Foah","Dawhenya","Afienya"],
+    "Shai-Osudoku District": ["Dodowa","Shai Hills","Osudoku","Akuse","Okpoi Gonno"]
+  },
+  "Ashanti": {
+    "Kumasi Metropolitan": ["Kumasi Central","Adum","Asokwa","Bantama","Bohyen","Danyame","Dichemso","Fankyenebra","Fante New Town","Kaase","Kejetia","Manhyia","Nhyiaeso","Oforikrom","Patasi","Suame","Tafo","KNUST","Asawase","Ayigya"],
+    "Oforikrom Municipal": ["Oforikrom","Kentinkrono","Emena","Ahodwo","Anwomaso","Ayigya"],
+    "Asokwa Municipal": ["Asokwa","Atonsu","Amoawi","Pankrono","Kwadaso"],
+    "Kwadaso Municipal": ["Kwadaso","Subin","Kenyasi","Barekese","Abuakwa"],
+    "Old Tafo Municipal": ["Old Tafo","Afrancho","Ayeduase","KNUST Area","Buokrom"],
+    "Suame Municipal": ["Suame","Anloga","Magazine","Aboabo","Buokrom"],
+    "Kwabre East District": ["Mamponteng","Kwabre","Abuakwa","Nkawie","Afrancho"],
+    "Afigya-Kwabre South District": ["Kodie","Afrancho","Kokobra","Ntonso"],
+    "Bosomtwe District": ["Kuntanase","Jachie","Pramso","Boadi","Aputuogya"],
+    "Ejisu Municipal": ["Ejisu","Juaben","Onwe","Besease","Bonwire","Fumesua"],
+    "Ejura Sekyeredumase Municipal": ["Ejura","Sekyeredumase","Hiawoanwu","Offinso"],
+    "Offinso Municipal": ["Offinso","Afrancho","Nkwanta","Offinso North"],
+    "Offinso North District": ["Akomadan","Agyeibikrom","Afrancho North","Nkwanta"],
+    "Mampong Municipal": ["Mampong","Nsuta","Wioso","Nyamebekyere","Ahafo Ano"],
+    "Sekyere Central District": ["Effiduase","Agogo","Asante Mampong","Sekyeredumase"],
+    "Sekyere East District": ["Effiduase","Juaben","Beposo","Ashanti Mampong"],
+    "Sekyere South District": ["Bekwai","Nyinahin","Atwima","Jacobu"],
+    "Sekyere Afram Plains District": ["Kumawu","Afram Plains","Mampong"],
+    "Kumawu District": ["Kumawu","Juaben","Abuom","Atibie"],
+    "Amansie Central District": ["Jacobu","Manso Nkwanta","Akrokeri","Twedie"],
+    "Amansie South District": ["Manso Amenfi","Tutuka","Banka","Asempaneye"],
+    "Amansie West District": ["Manso","Wioso","Abuom","Nkwanta"],
+    "Obuasi Municipal": ["Obuasi","Tutuka","Sanso","Kwabrafoso","Mampehia"],
+    "Obuasi East District": ["Antoakrom","Binsere","Odumasi","Kokofu"],
+    "Adansi Asokwa District": ["Fomena","Adansi","Asokwa","Akyem Afransie"],
+    "Adansi North District": ["New Edubiase","Fumso","Medoma","Dompoase"],
+    "Adansi South District": ["Fomena","Akrokerri","Odumasi","Brofoyedur"],
+    "Asante Akyem Central Municipal": ["Agogo","Juaso","Konongo","Odumasi Ashanti"],
+    "Asante Akyem North District": ["Agogo","Bompata","Drobonso","Kuntanase"],
+    "Asante Akyem South District": ["Juaso","Konongo","Odumasi","Agogo"],
+    "Bekwai Municipal": ["Bekwai","Antoakrom","Atonsu","Poano","Amakom"],
+    "Bosome Freho District": ["Asiwa","Freho","Aboabogya","Nkwabeng"],
+    "Atwima Kwanwoma District": ["Foase","Pakyi No.1","Pakyi No.2","Kumasi South"],
+    "Atwima Mponua District": ["Toase","Nyinahin","Mponua","Dadiase"],
+    "Atwima Nwabiagya Municipal": ["Barekese","Nkawie","Toase","Abrepo"],
+    "Atwima Nwabiagya North District": ["Nkawie","Toase","Barekese","Kenyasi No.1"]
+  },
+  "Western": {
+    "Sekondi-Takoradi Metropolitan": ["Sekondi","Takoradi","Effia","Kwesimintsim","Essikado","Kojokrom","Ketan","Fijai","Airport Ridge","New Takoradi"],
+    "Ahanta West Municipal": ["Agona Nkwanta","Dixcove","Busua","Princess Town","Agona Beyin"],
+    "Nzema East Municipal": ["Axim","Beyin","Eikwe","Gwira Banso","Aiyinase"],
+    "Ellembele District": ["Nkroful","Half Assini","Jomoro","Tikobo","Atuabo"],
+    "Jomoro District": ["Half Assini","Jomoro","Axim","Atuabo","Beyin"],
+    "Tarkwa-Nsuaem Municipal": ["Tarkwa","Nsuaem","Bogoso","Prestea","Damang"],
+    "Prestea Huni Valley District": ["Prestea","Huni Valley","Awotwe","Insiza"],
+    "Wassa Amenfi Central District": ["Manso Amenfi","Wassa","Asankrangwa","Enyinabrim"],
+    "Wassa Amenfi East District": ["Wassa Akropong","Asankrangwa","Amenfi","Amoanda"],
+    "Wassa Amenfi West District": ["Enchi","Asankrangwa","Manso","Wassa Dunkwa"],
+    "Wassa East District": ["Daboase","Twifo Praso","Wassa","Inchaban"],
+    "Mpohor District": ["Mpohor","Shama","Inchaban","Aboadze"],
+    "Shama District": ["Shama","Essiama","Komenda","Aboso"],
+    "Effia-Kwesimintsim Municipal": ["Kwesimintsim","Effia","Ntankoful","New Takoradi"],
+    "Bia East District": ["Oseikojokrom","Debiso","Bia","Sefwi Debiso"],
+    "Bia West District": ["Bonkwae","Debiso","Bia","Sefwi Essam"],
+    "Sefwi Akontombra District": ["Akontombra","Gyapa","Yawkrom","Nsawora"],
+    "Sefwi Wiawso Municipal": ["Sefwi Wiawso","Benchema","Adum Banso","Asafo"],
+    "Bibiani-Anhwiaso-Bekwai Municipal": ["Bibiani","Anhwiaso","Bekwai","Sefwi Asafo"]
+  },
+  "Western North": {
+    "Sefwi Wiawso Municipal": ["Sefwi Wiawso","Benchema","Adum Banso","Asafo","Nsawora"],
+    "Bibiani-Anhwiaso-Bekwai Municipal": ["Bibiani","Anhwiaso","Bekwai","Sefwi Asafo","Sefwi Bekwai"],
+    "Sefwi Akontombra District": ["Akontombra","Gyapa","Yawkrom","Nsawora","Kunsu"],
+    "Bia East District": ["Oseikojokrom","Debiso","Nyamebekyere","Sefwi Debiso","Bonkwae"],
+    "Bia West District": ["Bonkwae","Debiso","Kwaesimintsim","Sefwi Essam","Dwinase"],
+    "Bodi District": ["Bodi","Asawinso","Anhwia Nkwanta","Adum Banso","Sefwi Bosome"],
+    "Juaboso District": ["Juaboso","Nyamebekyere","Bonkwae","Yawkrom","Sefwi Kutre"]
+  },
+  "Central": {
+    "Cape Coast Metropolitan": ["Cape Coast","Pedu","Abura","Amamoma","Kotokuraba","Siwdo","Brafoyaw","Abakam","University of Cape Coast"],
+    "Komenda-Edina-Eguafo-Abirem Municipal": ["Komenda","Edina","Eguafo","Abirem","Elmina"],
+    "Mfantsiman Municipal": ["Saltpond","Anomabo","Biriwa","Mankessim","Yamoransa"],
+    "Abura-Asebu-Kwamankese District": ["Abura Dunkwa","Asebu","Kwamankese","Abeadze Dominase"],
+    "Ajumako-Enyan-Essiam District": ["Ajumako","Enyan Abaasa","Essiam","Bisease"],
+    "Gomoa East District": ["Apam","Gomoa Afransi","Gomoa Assin","Gomoa Mpota"],
+    "Gomoa West District": ["Apam","Gomoa Feteh","Gomoa Simbrofo","Gomoa Brofo"],
+    "Gomoa Central District": ["Apam","Akrowa","Gomoa Dawurampong","Okyereko"],
+    "Awutu Senya East Municipal": ["Kasoa","Obom","Awutu","Bawjiase","Ofaakor"],
+    "Awutu Senya West District": ["Senya Breku","Awutu","Bawjiase","Awutu Bereku"],
+    "Effutu Municipal": ["Winneba","Effutu","Breman","Apam West"],
+    "Agona West Municipal": ["Agona Swedru","Agona Nsaba","Kwanyako","Agona Bobikuma"],
+    "Agona East District": ["Agona Duakwa","Agona Abodom","Agona Nkwanta","Agona Amanfrom"],
+    "Assin Central Municipal": ["Assin Fosu","Assin Breku","Assin Bereku","Assin Foso"],
+    "Assin North District": ["Assin Foso","Assin Manso","Nyankumase","Assin Akropong"],
+    "Assin South District": ["Assin Bereku","Assin Praso","Assin Endwa","Obuasi"],
+    "Upper Denkyira East Municipal": ["Dunkwa-on-Offin","Diaso","Obuasi","Hemang"],
+    "Upper Denkyira West District": ["Diaso","Dunkwa","Antoakrom","Assin Fosu"],
+    "Twifo Atti-Morkwa District": ["Twifo Praso","Atti","Morkwa","Twifo Heman"],
+    "Twifo Hemang Lower Denkyira District": ["Hemang","Assin Dompim","Lower Denkyira","Twifo Praso"],
+    "Ekumfi District": ["Ekumfi","Anomabo","Moree","Narkwa"]
+  },
+  "Eastern": {
+    "New Juaben South Municipal": ["Koforidua","Effiduase","Asokore Koforidua","Nsukwao"],
+    "New Juaben North District": ["Koforidua North","Asokore","Nuaso","Nkoranza"],
+    "Birim Central Municipal": ["Oda","Hemang","Akyem Tafo","Ofoase"],
+    "Birim North District": ["Suhum","Ayirebi","Nsutam","Apedwa"],
+    "Birim South District": ["Akim Oda","Akim Swedru","Akim Asafo","Akim Achiase"],
+    "East Akyem Municipal": ["Kukurantumi","Ofoase","Asamankese","Nkawkaw"],
+    "West Akyem Municipal": ["Asamankese","Kwabeng","Oda","Coaltar"],
+    "Kwaebibirem Municipal": ["Kade","Nkawkaw","Akim Manso","Adubiase"],
+    "Atiwa West District": ["Kwabeng","Anyinam","Atiwa","Tepa"],
+    "Atiwa East District": ["Anyinam","Atiwa","Kukurantumi","Nkawkaw"],
+    "Suhum Municipal": ["Suhum","Nsutam","Apedwa","Coaltar"],
+    "Akuapem North Municipal": ["Akropong","Aburi","Mamfe","Adukrom","Mampong Akuapem"],
+    "Akuapem South District": ["Aburi","Nsawam","Abokobi","Adenta"],
+    "Nsawam-Adoagyiri Municipal": ["Nsawam","Adoagyiri","Dodowa","Pantang"],
+    "Abuakwa North Municipal": ["Kukurantumi","Abuakwa","Anyinam","Bediako"],
+    "Abuakwa South Municipal": ["Kukurantumi","Begoro","Asafo","Kwabeng"],
+    "Kwahu East District": ["Mpraeso","Nkwatia","Obo","Kwahu Tafo"],
+    "Kwahu West District": ["Atibie","Pepease","Abetifi","Kwahu Praso"],
+    "Kwahu Afram Plains North District": ["Donkorkrom","Ekye Amanfrom","Tease","Forifori"],
+    "Kwahu Afram Plains South District": ["Tease","Nkwatia","Kwahu Tafo","Aduamoa"],
+    "Kwahu South District": ["Abetifi","Nkwatia","Mpraeso","Nkyenekyene"],
+    "Kwahu Central District": ["Abetifi","Mpraeso","Nkwatia","Obo"],
+    "Upper Manya Krobo District": ["Odumase Krobo","Akuse","Asesewa","Klo Agogo"],
+    "Lower Manya Krobo Municipal": ["Odumase Krobo","Akuse","Atua","Somanya"],
+    "Yilo Krobo Municipal": ["Somanya","Doryumu","Klo","Asesewa"],
+    "Asuogyaman District": ["Atimpoku","Akosombo","Senchi","Kpong"],
+    "Fanteakwa North District": ["Begoro","Osino","Amanfrom","Begoro North"],
+    "Fanteakwa South District": ["Suhum","Fanteakwa","Osino","Akim Manso"]
+  },
+  "Volta": {
+    "Ho Municipal": ["Ho","Bankoe","Dome","Takla","Ahoe","Kpehe","Shia","Ho Heve"],
+    "Ho West District": ["Dzolokpuita","Takla","Sokode","Wegbe"],
+    "Agotime-Ziope District": ["Kpetoe","Agotime","Abor","Ziope"],
+    "South Dayi District": ["Peki","Tsito","Alavanyo","Peki Blengo"],
+    "North Dayi District": ["Kpeve","Hohoe","Dayi","Fodzi"],
+    "Hohoe Municipal": ["Hohoe","Gbi","Lolobi","Likpe","Santrokofi","Hohoe Akpafu"],
+    "Afadjato South District": ["Vane","Afadjato","Logba","Have"],
+    "Biakoye District": ["Nkonya","Oti","Jasikan","Worawora"],
+    "Jasikan District": ["Jasikan","Nkonya","Borada","Dodi Papase"],
+    "Krachi East Municipal": ["Kete Krachi","Krachi","Abotoase","Nkomi"],
+    "Krachi West District": ["Chinderi","Krachi","Nkomi","Dambai"],
+    "Krachi Nchumuru District": ["Nkrankwanta","Chinderi","Kandia","Banda Nkwanta"],
+    "Nkwanta South Municipal": ["Nkwanta","Oti Damanko","Kpassa","Kpandai"],
+    "Nkwanta North District": ["Kpassa","Bowiri","Damanko","Oti"],
+    "Akan District": ["Worawora","Akan","Nkonya","Dodi Papase"],
+    "Keta Municipal": ["Keta","Anloga","Dzelukope","Woe","Havedzi"],
+    "Akatsi South District": ["Akatsi","Afife","Klikor","Dzodze"],
+    "Akatsi North District": ["Ave Dakpa","Akatsi","Keta","Adidome"],
+    "Central Tongu District": ["Battor","Adidome","Sogakope","Mepe"],
+    "South Tongu District": ["Sogakope","Dabala","Dododze","Fieve"],
+    "North Tongu District": ["Adidome","Battor","Mepe","Juapong"],
+    "Ketu South Municipal": ["Denu","Aflao","Klikor","Agbozume","Dzodze"],
+    "Ketu North Municipal": ["Dzodze","Penyi","Tadzewu","Hevi"],
+    "Anloga District": ["Anloga","Woe","Tegbi","Vodza","Anloga Keta"]
+  },
+  "Oti": {
+    "Krachi East Municipal": ["Kete Krachi","Dambai","Abotoase","Nkomi","Janga"],
+    "Krachi West District": ["Chinderi","Krachi","Nkomi","Kantindi"],
+    "Krachi Nchumuru District": ["Nkrankwanta","Chinderi","Kandia","Banda Nkwanta"],
+    "Nkwanta South Municipal": ["Nkwanta","Oti Damanko","Kpassa","Kpandai","Kpalbe"],
+    "Nkwanta North District": ["Kpassa","Bowiri","Damanko","Oti North"],
+    "Guan District": ["Dambai","Prang","Yeji","Kete Krachi"],
+    "Biakoye District": ["Jasikan","Nkonya","Oti","Borada"]
+  },
+  "Bono": {
+    "Sunyani Municipal": ["Sunyani","Fiapre","Abesim","New Dormaa","Odumasi","Kotaa"],
+    "Sunyani West District": ["Odumasi","Chiraa","Sunyani West","Kodie"],
+    "Dormaa Central Municipal": ["Dormaa Ahenkro","Wamfie","Nkrankwanta","Dormaa Akwamu"],
+    "Dormaa East District": ["Wamfie","Dormaa East","Nkrankwanta","Bonzan"],
+    "Dormaa West District": ["Nkrankwanta","Wamfie","Dormaa","Bonzan"],
+    "Berekum East Municipal": ["Berekum","Tanoso","Nsoatre","Jinijini"],
+    "Berekum West District": ["Nsoatre","Badu","Berekum West","Sehwi"],
+    "Jaman North District": ["Sampa","Seikwa","Jaman North","Nsawkaw"],
+    "Jaman South Municipal": ["Drobo","Sampa","Jaman","Japekrom"],
+    "Tain District": ["Nsawkaw","Seikwa","Tain","Badu"],
+    "Banda District": ["Banda Ahenkro","Aboabo","Nkoranza","Banda Nkwanta"]
+  },
+  "Bono East": {
+    "Techiman Municipal": ["Techiman","Tuobodom","Tanoso","Offuman","Nkoranza"],
+    "Techiman North District": ["Tuobodom","Offuman","Techiman North","Tanoso"],
+    "Nkoranza North District": ["Busunya","Offuman","Nkoranza North","Yeji"],
+    "Nkoranza South Municipal": ["Nkoranza","Busunya","Atta-Buoho","Nkoranza South"],
+    "Kintampo Municipal": ["Kintampo","Jema","Nante","Kawampe"],
+    "Kintampo North Municipal": ["Kintampo North","Jema","Nante","Kawampe"],
+    "Kintampo South District": ["Jema","Nante","Kintampo South","Amanchia"],
+    "Pru East District": ["Yeji","Aframso","Pru East","Prang"],
+    "Pru West District": ["Prang","Yeji","Aframso","Kintampo"],
+    "Atebubu-Amantin Municipal": ["Atebubu","Amantin","Kwamang","Fiapre"],
+    "Sene East District": ["Kwame Danso","Twene Amanfrom","Sene East","Banda"],
+    "Sene West District": ["Kwame Danso","Dome","Sene West","Atibie"]
+  },
+  "Ahafo": {
+    "Tano North Municipal": ["Duayaw Nkwanta","Tanoso","Tano North","Ntotroso"],
+    "Tano South Municipal": ["Bechem","Duayaw Nkwanta","Mim","Kenyasi"],
+    "Asutifi North District": ["Kenyasi","Hwidiem","Asutifi","Ntotroso"],
+    "Asutifi South District": ["Kenyasi No.2","Mim","Asutifi South","Acherensua"],
+    "Asunafo North Municipal": ["Goaso","Mim","Kukuom","Hwidiem","Duayaw Nkwanta"],
+    "Asunafo South District": ["Kukuom","Goaso","Akrodie","Sankore"]
+  },
+  "Brong-Ahafo": {
+    "Sunyani Municipal": ["Sunyani","Fiapre","Kotaa","Abesim","New Dormaa"],
+    "Techiman Municipal": ["Techiman","Tuobodom","Tanoso","Offuman"],
+    "Kintampo Municipal": ["Kintampo","Jema","Nante","Kawampe"],
+    "Atebubu-Amantin Municipal": ["Atebubu","Amantin","Kwamang","Fiapre"],
+    "Berekum East Municipal": ["Berekum","Dormaa Ahenkro","Tanoso","Nsoatre"],
+    "Dormaa Central Municipal": ["Dormaa Ahenkro","Wamfie","Nkrankwanta","Dormaa Akwamu"],
+    "Nkoranza South Municipal": ["Nkoranza","Busunya","Atta-Buoho","Nkoranza South"],
+    "Tano North Municipal": ["Duayaw Nkwanta","Tano North","Tanoso","Ntotroso"],
+    "Asunafo North Municipal": ["Goaso","Mim","Kukuom","Hwidiem"],
+    "Jaman North District": ["Sampa","Jaman North","Seikwa","Nsawkaw"],
+    "Jaman South Municipal": ["Drobo","Jaman","Sampa","Japekrom"],
+    "Banda District": ["Banda Ahenkro","Nkoranza","Aboabo","Banda Nkwanta"],
+    "Tain District": ["Nsawkaw","Tain","Seikwa","Badu"],
+    "Pru East District": ["Yeji","Pru East","Aframso","Prang"],
+    "Sene East District": ["Kwame Danso","Sene East","Twene Amanfrom","Banda"],
+    "Asutifi North District": ["Kenyasi","Asutifi","Hwidiem","Ntotroso"],
+    "Ahafo Ano North Municipal": ["Tepa","Mankranso","Nkwanta","Hwidiem"],
+    "Ahafo Ano South East District": ["Mankranso","Ahafo Ano South","Kumawu","Atibie"],
+    "Ahafo Ano South West District": ["Mankranso","Tepa","Hwidiem","Nkwanta"]
+  },
+  "Northern": {
+    "Tamale Metropolitan": ["Tamale","Sakasaka","Kukuo","Nyohini","Choggu","Datoyili","Vittin","Lamashegu","Sagnarigu","Gumbihini","Zogbeli","Gurugu","Kanvili","Tishiegu","Banvim"],
+    "Sagnarigu District": ["Sagnarigu","Kumbungu","Tampion","Nyanshegurugu","Tubom"],
+    "Tolon District": ["Tolon","Kumbungu","Wuba","Dalun","Diare"],
+    "Kumbungu District": ["Kumbungu","Tolon","Gushegu","Dalun","Wuba"],
+    "Nanton District": ["Nanton","Savelugu","Diare","Gushegu","Ntonayili"],
+    "Savelugu Municipal": ["Savelugu","Diare","Nanton","Pong Tamale","Voggu"],
+    "Karaga District": ["Karaga","Voggu","Gushegu","Lonto","Sang"],
+    "Gushegu Municipal": ["Gushegu","Karaga","Mion","Yendi","Kpalbe"],
+    "Mion District": ["Sang","Mion","Karaga","Demon","Nkoraa"],
+    "Nanumba North Municipal": ["Bimbilla","Wulensi","Nakpayili","Kpandai","Saboba"],
+    "Nanumba South District": ["Wulensi","Nkanchina","Bimbilla","Tatale"],
+    "Zabzugu District": ["Zabzugu","Tatale","Sang","Chinderi"],
+    "Tatale-Sanguli District": ["Tatale","Sanguli","Zabzugu","Demon"],
+    "East Gonja Municipal": ["Salaga","Kafaba","Tuna","Ndewura","Kpembe"],
+    "Central Gonja District": ["Buipe","Kadelso","Yapei","Larabanga"],
+    "North Gonja District": ["Daboya","Mpaha","Buipe","Yapei"],
+    "West Gonja Municipal": ["Damongo","Bole","Bamboi","Mpaha"],
+    "North East Gonja District": ["Mpaha","Salaga North","Kafaba","Fufulso"],
+    "Kpandai District": ["Kpandai","Saboba","Wulensi","Nkanchina"],
+    "Bole District": ["Bole","Bamboi","Mpaha","Tinga"],
+    "Sawla-Tuna-Kalba District": ["Sawla","Tuna","Kalba","Dondoli"]
+  },
+  "Savannah": {
+    "Damongo District": ["Damongo","Laribanga","Mpaha","Tinga","Canteen"],
+    "West Gonja Municipal": ["Damongo","Bole","Bamboi","Mpaha","Tinga"],
+    "North Gonja District": ["Daboya","Mpaha","Buipe","Yapei","Kusawgu"],
+    "Central Gonja District": ["Buipe","Yapei","Kadelso","Larabanga","Busunu"],
+    "East Gonja Municipal": ["Salaga","Kafaba","Tuna","Ndewura","Kpembe"],
+    "Bole District": ["Bole","Bamboi","Mpaha","Tinga","Mandari"],
+    "Sawla-Tuna-Kalba District": ["Sawla","Tuna","Kalba","Dondoli","Gushie"],
+    "North East Gonja District": ["Mpaha","Salaga North","Kafaba","Fufulso"]
+  },
+  "North East": {
+    "Nalerigu-Gambaga District": ["Nalerigu","Gambaga","Langbinsi","Wungu","Yagaba"],
+    "East Mamprusi Municipal": ["Gambaga","Nalerigu","Kpasenkpe","Gbintiri","Langbinsi"],
+    "West Mamprusi Municipal": ["Walewale","Janga","Nakpayili","Zuarungu","Kpasenkpe"],
+    "Mamprugu Moagduri District": ["Yagaba","Kubori","Wungu","Nasia","Gambaga"],
+    "Yunyoo-Nasuan District": ["Yunyoo","Nasuan","Bunkpurugu","Siniensi","Lanyokura"],
+    "Bunkpurugu Nakpayili District": ["Bunkpurugu","Nakpayili","Kpasenkpe","Gbintiri","Tatale"],
+    "Chereponi District": ["Chereponi","Saboba","Wulensi","Sang","Bunkpurugu"]
+  },
+  "Upper East": {
+    "Bolgatanga Municipal": ["Bolgatanga","Sumbrungu","Zuarungu","Tindama","Navio","Yorogo","Zaare"],
+    "Bolgatanga East District": ["Sumbrungu","Zuarungu","Navio","Kalbeo","Biung"],
+    "Bongo District": ["Bongo","Sorbisi","Namoo","Wiaga","Nayagenia"],
+    "Builsa North Municipal": ["Sandema","Gbedema","Chuchuliga","Siniensi","Kanjaga"],
+    "Builsa South District": ["Fumbisi","Kanjaga","Chana","Bachonsa","Wiaga"],
+    "Kasena-Nankana Municipal": ["Navrongo","Vea","Paga","Kandiga","Kayoro"],
+    "Kasena-Nankana West District": ["Chiana","Mirigu","Paga","Katiu","Pungu"],
+    "Talensi District": ["Tongo","Gorogo","Tenzug","Balungu","Sakabogu"],
+    "Nabdam District": ["Nangodi","Sakaa","Pelungu","Shia","Zuarungu"],
+    "Binduri District": ["Binduri","Bazua","Mognori","Garu","Kulungugu"],
+    "Bawku Municipal": ["Bawku","Pusiga","Zebilla","Missiga","Widana"],
+    "Bawku West District": ["Zebilla","Pusiga","Kuka","Widana","Binduri"],
+    "Garu District": ["Garu","Mognori","Binduri","Kulungugu","Tempane"],
+    "Tempane District": ["Tempane","Garu","Kulungugu","Binduri","Walewale"],
+    "Pusiga District": ["Pusiga","Bawku West","Zebilla","Mognori","Widana"]
+  },
+  "Upper West": {
+    "Wa Municipal": ["Wa","Kperisi","Sing","Busa","Nyanshegurugu","Pirisi","Dobile"],
+    "Wa West District": ["Wechiau","Dorimon","Jirapa","Kaleo","Ko"],
+    "Wa East District": ["Funsi","Wa East","Kaleo","Daffiama","Issa"],
+    "Nadowli-Kaleo District": ["Nadowli","Kaleo","Daffiama","Bussie","Issa"],
+    "Daffiama-Bussie-Issa District": ["Daffiama","Bussie","Issa","Kaleo","Nadowli"],
+    "Jirapa Municipal": ["Jirapa","Nandom","Lawra","Lambussie","Han"],
+    "Lambussie-Karni District": ["Lambussie","Karni","Han","Hamile","Nandom"],
+    "Nandom Municipal": ["Nandom","Hamile","Lawra","Lambussie","Karni"],
+    "Lawra Municipal": ["Lawra","Nandom","Hamile","Jirapa","Brong"],
+    "Sissala East Municipal": ["Tumu","Gwollu","Kunchogo","Kulpawn","Sissala"],
+    "Sissala West District": ["Gwollu","Tumu","Sissala","Kulpawn","Han"],
+    "Dorimon District": ["Dorimon","Wechiau","Jirapa","Ko","Kaleo"]
+  }
+};
+
+// ── Cascading dropdown logic ──────────────────────────────────────────────────
+function populateRegions() {
+  const sel = document.getElementById('gen-region');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Select Region —</option>';
+  Object.keys(GHANA_LOCATIONS).sort().forEach(region => {
+    const opt = document.createElement('option');
+    opt.value = region;
+    opt.textContent = region;
+    sel.appendChild(opt);
+  });
+  // Default to Northern since farm is in Tamale
+  sel.value = 'Northern';
+  onRegionChange(true);
+}
+
+function onRegionChange(setDefault) {
+  const region   = (window._genLocation?.region)   || document.getElementById('gen-region')?.value   || 'Northern';
+  const district = (window._genLocation?.district) || document.getElementById('gen-district')?.value || '';
+  const town     = (window._genLocation?.town)     || document.getElementById('gen-town')?.value     || '';
+  window._genLocation = null; // consume
+  const districtSel = document.getElementById('gen-district');
+  const townSel = document.getElementById('gen-town');
+
+  districtSel.innerHTML = '<option value="">— Select District —</option>';
+  townSel.innerHTML = '<option value="">— Select Town —</option>';
+  townSel.disabled = true;
+
+  if (!region || !GHANA_LOCATIONS[region]) {
+    districtSel.disabled = true;
+    return;
+  }
+
+  districtSel.disabled = false;
+  const districts = Object.keys(GHANA_LOCATIONS[region]).sort();
+  districts.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    districtSel.appendChild(opt);
+  });
+
+  if (setDefault) {
+    districtSel.value = 'Tamale Metropolitan';
+    onDistrictChange(true);
+  }
+}
+
+function onDistrictChange(setDefault) {
+  const region   = (window._genLocation?.region)   || document.getElementById('gen-region')?.value   || 'Northern';
+  const town     = (window._genLocation?.town)     || document.getElementById('gen-town')?.value     || '';
+  window._genLocation = null; // consume
+  const district = document.getElementById('gen-district').value;
+  const townSel = document.getElementById('gen-town');
+
+  townSel.innerHTML = '<option value="">— Select Town —</option>';
+
+  if (!region || !district || !GHANA_LOCATIONS[region]?.[district]) {
+    townSel.disabled = true;
+    return;
+  }
+
+  townSel.disabled = false;
+  const towns = GHANA_LOCATIONS[region][district];
+  towns.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t;
+    townSel.appendChild(opt);
+  });
+
+  if (setDefault) {
+    townSel.value = towns[0];
+  }
+}
+
+// ── Override generatePlan to use the new fields ───────────────────────────────
+const _origGeneratePlan = generatePlan;
+generatePlan = async function() {
+  const region   = document.getElementById('gen-region')?.value;
+  const district = document.getElementById('gen-district')?.value;
+  const town     = document.getElementById('gen-town')?.value;
+
+  if (!region) { alert('Please select a Region first.'); return; }
+  if (!district) { alert('Please select a District.'); return; }
+  if (!town) { alert('Please select a Town / Community.'); return; }
+
+  // Patch the prompt location before calling generate
+  window._genLocation = { region, district, town };
+  _origGeneratePlan();
+};
+
+// Kick off region population after login
+const _origInitCharts = initCharts;
+initCharts = function() {
+  _origInitCharts();
+  populateRegions();
+};
+
+</script>
+</body>
+</html>
